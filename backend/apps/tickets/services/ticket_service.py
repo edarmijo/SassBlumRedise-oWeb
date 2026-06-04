@@ -33,7 +33,7 @@ from core.exceptions.domain_exceptions import (
     CommentRequiredError,
 )
 
-
+TICKETNOTFOUND="Ticket no encontrado."
 class TicketValidationError(Exception):
     def __init__(self, field: str, message: str) -> None:
         self.field = field
@@ -104,7 +104,7 @@ class TicketService(ITicketClientActions, ITicketWorkerActions, ITicketAdminActi
     def get_ticket_detail(self, ticket_id: int, user) -> dict:
         ticket = self._repo.get_by_id(ticket_id)
         if ticket is None or not self._can_see(ticket, user):
-            raise TicketNotFound("Ticket no encontrado.")
+            raise TicketNotFound(TICKETNOTFOUND)
         return self._detail(ticket)
 
     # ── ITicketWorkerActions ───────────────────────────────────────────────────
@@ -143,7 +143,7 @@ class TicketService(ITicketClientActions, ITicketWorkerActions, ITicketAdminActi
         from apps.authentication.models import User  # noqa: PLC0415
         ticket = self._repo.get_by_id(ticket_id)
         if ticket is None:
-            raise TicketNotFound("Ticket no encontrado.")
+            raise TicketNotFound(TICKETNOTFOUND)
         if ticket.estado != Ticket.Estado.NUEVO:
             raise InvalidTransitionError(ticket.estado, Ticket.Estado.EN_PROCESO)
         worker = User.objects.filter(id=worker_id, role=User.Role.WORKER,
@@ -163,7 +163,7 @@ class TicketService(ITicketClientActions, ITicketWorkerActions, ITicketAdminActi
         from apps.authentication.models import User  # noqa: PLC0415
         ticket = self._repo.get_by_id(ticket_id)
         if ticket is None:
-            raise TicketNotFound("Ticket no encontrado.")
+            raise TicketNotFound(TICKETNOTFOUND)
         worker = User.objects.filter(id=new_worker_id, role=User.Role.WORKER,
                                      estado=User.Estado.ACTIVE).first()
         if worker is None:
@@ -184,7 +184,7 @@ class TicketService(ITicketClientActions, ITicketWorkerActions, ITicketAdminActi
     def _require(self, ticket_id: int, user) -> Ticket:
         ticket = self._repo.get_by_id(ticket_id)
         if ticket is None or not self._can_see(ticket, user):
-            raise TicketNotFound("Ticket no encontrado.")
+            raise TicketNotFound(TICKETNOTFOUND)
         return ticket
 
     @staticmethod
