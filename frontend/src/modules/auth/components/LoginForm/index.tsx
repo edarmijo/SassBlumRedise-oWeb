@@ -8,7 +8,7 @@ import { Label } from '../../../../core/ui/label'
 import { Alert, AlertDescription } from '../../../../core/ui/alert'
 
 interface LoginFormProps {
-  onSuccess?: () => void
+  readonly onSuccess?: () => void
 }
 
 /**
