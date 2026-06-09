@@ -31,8 +31,13 @@ export class FileValidator extends BaseValidator {
   ])
 
   validate(data: unknown): ValidationResult {
-    // Implementation: iterate (data as { adjuntos?: File[] }).adjuntos
-    // Check size and type for each file; return first failure
-    throw new Error('Not implemented — Sprint 2 execution phase')
+    const { adjuntos = [] } = data as { adjuntos?: File[] }
+    for (const file of adjuntos) {
+      if (file.size > FileValidator.MAX_SIZE_BYTES)
+        return { isValid: false, field: 'adjuntos', errors: [`"${file.name}" supera el tamaño máximo de 5 MB.`] }
+      if (!FileValidator.ALLOWED_MIME_TYPES.has(file.type))
+        return { isValid: false, field: 'adjuntos', errors: [`"${file.name}" tiene un formato no permitido.`] }
+    }
+    return { isValid: true, field: '', errors: [] }
   }
 }

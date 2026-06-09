@@ -3,8 +3,7 @@ Tests for ticket creation permissions — IsClient, IsWorker, IsAdmin.
 Run: pytest apps/tickets/tests/test_ticket_service.py -v
 """
 
-import pytest
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
 from rest_framework.test import APIRequestFactory
 
@@ -35,76 +34,49 @@ def check_permission(permission_class, user) -> bool:
 
 class TestIsClient:
     def test_client_user_is_allowed(self):
-        with patch("core.permissions.rbac_permissions.User") as MockUser:
-            MockUser.Role.CLIENT = "client"
-            MockUser.Estado.ACTIVE = "activo"
-            user = make_user("client")
-            assert check_permission(IsClient, user)
+        user = make_user("client")
+        assert check_permission(IsClient, user)
 
     def test_worker_user_is_denied(self):
-        with patch("core.permissions.rbac_permissions.User") as MockUser:
-            MockUser.Role.CLIENT = "client"
-            MockUser.Estado.ACTIVE = "activo"
-            user = make_user("worker")
-            assert not check_permission(IsClient, user)
+        user = make_user("worker")
+        assert not check_permission(IsClient, user)
 
     def test_admin_user_is_denied(self):
-        with patch("core.permissions.rbac_permissions.User") as MockUser:
-            MockUser.Role.CLIENT = "client"
-            MockUser.Estado.ACTIVE = "activo"
-            user = make_user("admin")
-            assert not check_permission(IsClient, user)
+        user = make_user("admin")
+        assert not check_permission(IsClient, user)
 
     def test_unauthenticated_user_is_denied(self):
-        with patch("core.permissions.rbac_permissions.User") as MockUser:
-            MockUser.Role.CLIENT = "client"
-            MockUser.Estado.ACTIVE = "activo"
-            user = MagicMock()
-            user.is_authenticated = False
-            assert not check_permission(IsClient, user)
+        user = MagicMock()
+        user.is_authenticated = False
+        assert not check_permission(IsClient, user)
 
     def test_blocked_client_is_denied(self):
-        with patch("core.permissions.rbac_permissions.User") as MockUser:
-            MockUser.Role.CLIENT = "client"
-            MockUser.Estado.ACTIVE = "activo"
-            user = make_user("client", estado="bloqueado")
-            assert not check_permission(IsClient, user)
+        user = make_user("client", estado="bloqueado")
+        assert not check_permission(IsClient, user)
 
 
 # ── IsWorker ───────────────────────────────────────────────────────────────────
 
 class TestIsWorker:
     def test_worker_user_is_allowed(self):
-        with patch("core.permissions.rbac_permissions.User") as MockUser:
-            MockUser.Role.WORKER = "worker"
-            MockUser.Estado.ACTIVE = "activo"
-            user = make_user("worker")
-            assert check_permission(IsWorker, user)
+        user = make_user("worker")
+        assert check_permission(IsWorker, user)
 
     def test_client_is_denied(self):
-        with patch("core.permissions.rbac_permissions.User") as MockUser:
-            MockUser.Role.WORKER = "worker"
-            MockUser.Estado.ACTIVE = "activo"
-            user = make_user("client")
-            assert not check_permission(IsWorker, user)
+        user = make_user("client")
+        assert not check_permission(IsWorker, user)
 
 
 # ── IsAdmin ────────────────────────────────────────────────────────────────────
 
 class TestIsAdmin:
     def test_admin_user_is_allowed(self):
-        with patch("core.permissions.rbac_permissions.User") as MockUser:
-            MockUser.Role.ADMIN = "admin"
-            MockUser.Estado.ACTIVE = "activo"
-            user = make_user("admin")
-            assert check_permission(IsAdmin, user)
+        user = make_user("admin")
+        assert check_permission(IsAdmin, user)
 
     def test_worker_is_denied(self):
-        with patch("core.permissions.rbac_permissions.User") as MockUser:
-            MockUser.Role.ADMIN = "admin"
-            MockUser.Estado.ACTIVE = "activo"
-            user = make_user("worker")
-            assert not check_permission(IsAdmin, user)
+        user = make_user("worker")
+        assert not check_permission(IsAdmin, user)
 
 
 # ── Ticket number format ───────────────────────────────────────────────────────

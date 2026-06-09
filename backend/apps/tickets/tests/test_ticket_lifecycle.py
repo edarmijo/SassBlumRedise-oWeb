@@ -54,7 +54,7 @@ class TestTicketLifecycle:
         }
         # Patch business-hours so the chain passes regardless of when tests run.
         with patch(
-            "apps.tickets.validators.business_rule_validator.datetime.datetime"
+            "apps.tickets.validators.business_rule_validator.datetime"
         ) as mock_dt:
             mock_dt.now.return_value = _BUSINESS_TIME
             return svc.create_ticket(data, cliente)
@@ -84,9 +84,10 @@ class TestTicketLifecycle:
         detail = self._create(cliente, service)
         ticket_id = int(detail["id"])
         svc = TicketService()
-        # Nuevo → Resuelto is not allowed (must go through EnProceso)
+        # Nuevo → Resuelto is not allowed (must go through EnProceso first).
+        # Use admin so _can_see() passes even though the ticket is unassigned.
         with pytest.raises(InvalidTransitionError):
-            svc.update_status(ticket_id, "Resuelto", "comentario", worker)
+            svc.update_status(ticket_id, "Resuelto", "comentario", admin)
 
     def test_number_format(self, cliente, service):
         assert TicketService().generate_ticket_number(2026).startswith("T-2026-")

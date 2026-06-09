@@ -1,13 +1,14 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { vi } from 'vitest'
 import { NotificationBell } from './index'
 import { NotificationServiceContext } from '../../hooks/useNotifications'
 import type { INotificationService } from '../../interfaces/INotificationService'
 import type { PaginatedNotifications } from '../../interfaces/types'
 
 // Mock the socket singleton so subscribe is a no-op returning an unsubscribe fn.
-jest.mock('../../../../infrastructure/websocket/SocketClient', () => ({
-  socketClient: { subscribe: jest.fn(() => () => {}) },
+vi.mock('../../../../infrastructure/websocket/SocketClient', () => ({
+  socketClient: { subscribe: vi.fn(() => () => {}) },
 }))
 
 function makeService(unread: number): INotificationService {
@@ -23,10 +24,10 @@ function makeService(unread: number): INotificationService {
     page: 1,
   }
   return {
-    getUserNotifications: jest.fn().mockResolvedValue(page),
-    markAsRead: jest.fn().mockResolvedValue(page.items[0]),
-    getPreferences: jest.fn().mockResolvedValue({ emailActivo: true, inAppActivo: true, wsActivo: true }),
-    setPreferences: jest.fn(),
+    getUserNotifications: vi.fn().mockResolvedValue(page),
+    markAsRead: vi.fn().mockResolvedValue(page.items[0]),
+    getPreferences: vi.fn().mockResolvedValue({ emailActivo: true, inAppActivo: true, wsActivo: true }),
+    setPreferences: vi.fn(),
   }
 }
 

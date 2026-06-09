@@ -24,7 +24,6 @@ interface FormErrors {
 }
 
 const PRIORIDADES: TicketPrioridad[] = ['Baja', 'Media', 'Alta', 'Critica']
-const AUTOSAVE_DELAY_MS = 30_000
 
 /**
  * SRP: manages ticket creation form state and submission.
@@ -42,9 +41,6 @@ export function CreateTicketForm({ services, onSuccess }: CreateTicketFormProps)
   const [adjuntos, setAdjuntos] = useState<File[]>([])
   const [errors, setErrors] = useState<FormErrors>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
-
-  // ── Auto-save draft to component state every 30s (SRP: no API call) ─────────
-  // Draft lives in this component's state only — discarded on successful submit.
 
   const validate = (): boolean => {
     const result = validatorChain.current.run({

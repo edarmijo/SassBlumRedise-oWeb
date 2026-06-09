@@ -1,12 +1,13 @@
 import { renderHook, act, waitFor } from '@testing-library/react'
 import type { ReactNode } from 'react'
+import { vi } from 'vitest'
 import { useNotifications, NotificationProvider } from './useNotifications'
 import type { INotificationService } from '../interfaces/INotificationService'
 import type { PaginatedNotifications } from '../interfaces/types'
 
 // Capture the subscribe handler so we can simulate an incoming WS frame.
 let wsHandler: ((payload: unknown) => void) | null = null
-jest.mock('../../../infrastructure/websocket/SocketClient', () => ({
+vi.mock('../../../infrastructure/websocket/SocketClient', () => ({
   socketClient: {
     subscribe: (_event: string, handler: (p: unknown) => void) => {
       wsHandler = handler
@@ -25,10 +26,10 @@ function makeService(): INotificationService {
     page: 1,
   }
   return {
-    getUserNotifications: jest.fn().mockResolvedValue(page),
-    markAsRead: jest.fn().mockResolvedValue(page.items[0]),
-    getPreferences: jest.fn(),
-    setPreferences: jest.fn(),
+    getUserNotifications: vi.fn().mockResolvedValue(page),
+    markAsRead: vi.fn().mockResolvedValue(page.items[0]),
+    getPreferences: vi.fn(),
+    setPreferences: vi.fn(),
   }
 }
 

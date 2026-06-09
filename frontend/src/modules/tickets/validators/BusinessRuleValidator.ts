@@ -19,9 +19,12 @@
 import { BaseValidator, type ValidationResult } from '../../../core/base/BaseValidator'
 
 export class BusinessRuleValidator extends BaseValidator {
-  validate(data: unknown): ValidationResult {
-    // Implementation: check current local time against business hours window
-    // Return ValidationResult(isValid=false, field='horario') outside window
-    throw new Error('Not implemented — Sprint 2 execution phase')
+  validate(_data: unknown): ValidationResult {
+    const now = new Date()
+    const day = now.getDay()   // 0=Dom, 6=Sáb
+    const hour = now.getHours()
+    if (day === 0 || day === 6 || hour < 7 || hour >= 20)
+      return { isValid: false, field: 'horario', errors: ['Solo puedes crear tickets en horario laboral (Lun–Vie 07:00–20:00).'] }
+    return { isValid: true, field: '', errors: [] }
   }
 }

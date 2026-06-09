@@ -116,12 +116,12 @@ class TestBusinessRuleValidator:
         self.v = BusinessRuleValidator(self.repo)
 
     def _patch_now(self, dt: datetime.datetime):
-        return patch("apps.tickets.validators.business_rule_validator.datetime.datetime") \
+        return patch("apps.tickets.validators.business_rule_validator.datetime") \
                .__enter__  # used as context manager in tests
 
     def test_valid_business_hour_passes(self):
         with patch(
-            "apps.tickets.validators.business_rule_validator.datetime.datetime"
+            "apps.tickets.validators.business_rule_validator.datetime"
         ) as mock_dt:
             mock_dt.now.return_value = BUSINESS_HOUR
             assert self.v.validate(VALID_DATA).is_valid
@@ -129,7 +129,7 @@ class TestBusinessRuleValidator:
     def test_weekend_fails(self):
         weekend = datetime.datetime(2026, 6, 13, 10, 0, 0)  # Saturday
         with patch(
-            "apps.tickets.validators.business_rule_validator.datetime.datetime"
+            "apps.tickets.validators.business_rule_validator.datetime"
         ) as mock_dt:
             mock_dt.now.return_value = weekend
             r = self.v.validate(VALID_DATA)
@@ -138,7 +138,7 @@ class TestBusinessRuleValidator:
     def test_before_business_hours_fails(self):
         early = datetime.datetime(2026, 6, 15, 6, 59, 0)  # Mon 06:59
         with patch(
-            "apps.tickets.validators.business_rule_validator.datetime.datetime"
+            "apps.tickets.validators.business_rule_validator.datetime"
         ) as mock_dt:
             mock_dt.now.return_value = early
             r = self.v.validate(VALID_DATA)
@@ -147,7 +147,7 @@ class TestBusinessRuleValidator:
     def test_duplicate_ticket_fails(self):
         self.repo.find_active_duplicate.return_value = object()  # truthy = duplicate exists
         with patch(
-            "apps.tickets.validators.business_rule_validator.datetime.datetime"
+            "apps.tickets.validators.business_rule_validator.datetime"
         ) as mock_dt:
             mock_dt.now.return_value = BUSINESS_HOUR
             r = self.v.validate(VALID_DATA)

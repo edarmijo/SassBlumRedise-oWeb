@@ -1,4 +1,4 @@
-import { Mail, Phone, MapPin, Instagram } from 'lucide-react'
+import { Mail, Phone, MapPin, Globe } from 'lucide-react'
 
 export function Footer() {
   return (
@@ -33,7 +33,7 @@ export function Footer() {
             <p className="text-sm text-gray-400">Puedes conocernos a través de nuestras redes sociales</p>
             <div className="flex items-center space-x-4 mt-4 md:mt-0">
               <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="hover:text-brand-cyan transition-colors">
-                <Instagram className="h-6 w-6" />
+                <Globe className="h-6 w-6" />
               </a>
             </div>
           </div>

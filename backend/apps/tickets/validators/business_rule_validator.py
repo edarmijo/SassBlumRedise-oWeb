@@ -10,7 +10,7 @@ SOLID: SRP · OCP · DIP · LSP
 
 from __future__ import annotations
 
-import datetime
+from datetime import datetime
 
 from core.base.base_validator import BaseValidator, ValidationResult
 
@@ -29,7 +29,7 @@ class BusinessRuleValidator(BaseValidator):
 
     def validate(self, data: dict) -> ValidationResult:
         # ── Rule 1: business hours ─────────────────────────────────────────
-        now = datetime.datetime.now()
+        now = datetime.now()
         if now.weekday() not in _BUSINESS_DAYS:
             return ValidationResult(
                 is_valid=False,

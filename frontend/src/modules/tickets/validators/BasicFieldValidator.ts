@@ -25,8 +25,13 @@ export class BasicFieldValidator extends BaseValidator {
   private static readonly DESCRIPCION_MIN = 10
 
   validate(data: unknown): ValidationResult {
-    // Implementation: check (data as TicketFormData).asunto.length and descripcion.length
-    // Return ValidationResult with field='asunto' or field='descripcion' on failure
-    throw new Error('Not implemented — Sprint 2 execution phase')
+    const { asunto = '', descripcion = '' } = data as { asunto?: string; descripcion?: string }
+    if (!asunto.trim())
+      return { isValid: false, field: 'asunto', errors: ['El asunto es requerido.'] }
+    if (asunto.length > BasicFieldValidator.ASUNTO_MAX)
+      return { isValid: false, field: 'asunto', errors: [`El asunto no puede superar ${BasicFieldValidator.ASUNTO_MAX} caracteres.`] }
+    if (descripcion.trim().length < BasicFieldValidator.DESCRIPCION_MIN)
+      return { isValid: false, field: 'descripcion', errors: [`La descripción debe tener al menos ${BasicFieldValidator.DESCRIPCION_MIN} caracteres.`] }
+    return { isValid: true, field: '', errors: [] }
   }
 }

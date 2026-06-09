@@ -7,14 +7,19 @@ Pattern: ISP — one permission class per role, never a monolithic PermissionCla
 SOLID: ISP · SRP · OCP
 """
 
+from django.apps import apps as django_apps
 from rest_framework.permissions import BasePermission
+
+
+def _get_user_model():
+    return django_apps.get_model('authentication', 'User')
 
 
 class IsClient(BasePermission):
     """Grants access only to authenticated users with role == 'client'."""
 
     def has_permission(self, request, view) -> bool:
-        from apps.authentication.models import User
+        User = _get_user_model()
         return (
             request.user.is_authenticated
             and request.user.role == User.Role.CLIENT
@@ -26,7 +31,7 @@ class IsWorker(BasePermission):
     """Grants access only to authenticated users with role == 'worker'."""
 
     def has_permission(self, request, view) -> bool:
-        from apps.authentication.models import User
+        User = _get_user_model()
         return (
             request.user.is_authenticated
             and request.user.role == User.Role.WORKER
@@ -38,7 +43,7 @@ class IsAdmin(BasePermission):
     """Grants access only to authenticated users with role == 'admin'."""
 
     def has_permission(self, request, view) -> bool:
-        from apps.authentication.models import User
+        User = _get_user_model()
         return (
             request.user.is_authenticated
             and request.user.role == User.Role.ADMIN

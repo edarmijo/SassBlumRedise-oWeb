@@ -15,22 +15,17 @@
  *   if (!result.isValid) showError(result.errors)
  */
 
-import type { ValidationResult } from '../../../core/base/BaseValidator'
+import { ValidatorFactory } from '../../../core/factories/ValidatorFactory'
+import type { BaseValidator, ValidationResult } from '../../../core/base/BaseValidator'
 
 export class TicketValidatorChain {
-  // root: BaseValidator — assigned by ValidatorFactory in constructor
+  private readonly root: BaseValidator
 
   constructor() {
-    // Implementation: import ValidatorFactory, call buildTicketChain(), store root node
+    this.root = ValidatorFactory.buildTicketChain()
   }
 
-  /**
-   * Run the full chain from the root node.
-   * @param data - the form data object (typed as TicketCreatePayload)
-   * @returns ValidationResult — first failure stops the chain (fail-fast)
-   */
   run(data: unknown): ValidationResult {
-    // Implementation: return this.root.run(data)
-    throw new Error('Not implemented — Sprint 2 execution phase')
+    return this.root.run(data)
   }
 }
