@@ -1,15 +1,16 @@
 # ─────────────────────────────────────────────
 # Stage 1: Build React app with Vite
 # ─────────────────────────────────────────────
-FROM node:22-alpine as builder
+FROM node:22-alpine AS builder
 
 WORKDIR /app
 
 # Copy package files
-COPY package.json package-lock.json .
+COPY package.json package-lock.json ./
 
-# Install dependencies
-RUN npm ci --prefer-offline --no-audit
+# npm install (no npm ci): el lockfile generado en Windows no incluye las
+# variantes Linux de los paquetes opcionales WASM (bug conocido de npm)
+RUN npm install --prefer-offline --no-audit
 
 # Copy source
 COPY . .
