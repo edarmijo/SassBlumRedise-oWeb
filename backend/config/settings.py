@@ -69,7 +69,9 @@ MIDDLEWARE = [
 # CORS
 # ─────────────────────────────────────────────
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",  # Vite dev server
+    origin.strip()
+    for origin in config('CORS_ALLOWED_ORIGINS',
+                        default='http://localhost:5173').split(',')
 ]
 
 
@@ -160,6 +162,18 @@ SIMPLE_JWT = {
 
 
 # ─────────────────────────────────────────────
+# SECURITY HEADERS (HTTPS enforcement + cookies)
+# ─────────────────────────────────────────────
+if not DEBUG:
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+
+
+# ─────────────────────────────────────────────
 # DJANGO CHANNELS — tiempo real (Sprint 4)
 # ─────────────────────────────────────────────
 USE_REDIS = config('USE_REDIS', default=False, cast=bool)
@@ -224,6 +238,7 @@ USE_TZ = True
 # ARCHIVOS ESTÁTICOS
 # ─────────────────────────────────────────────
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 
 # ─────────────────────────────────────────────
