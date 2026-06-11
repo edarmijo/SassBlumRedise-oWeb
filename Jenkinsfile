@@ -66,8 +66,8 @@ pipeline {
                         echo === TypeScript check ===
                         call npx tsc --noEmit || exit /b 1
 
-                        echo === Tests con vitest ===
-                        call npm run test || exit /b 1
+                        echo === Tests con vitest (threads sin paralelismo: los forks no arrancan bajo la cuenta de servicio de Jenkins) ===
+                        call npm run test -- --pool=threads --no-file-parallelism || exit /b 1
 
                         echo === Lint con ESLint (no bloqueante: 25 errores preexistentes pendientes de limpiar) ===
                         call npm run lint
