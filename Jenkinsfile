@@ -36,21 +36,21 @@ pipeline {
                         ) > .env
 
                         echo === Creando entorno virtual ===
-                        python -m venv .venv-ci
-                        call .venv-ci\\Scripts\\activate.bat
+                        python -m venv .venv-ci || exit /b 1
+                        call .venv-ci\\Scripts\\activate.bat || exit /b 1
 
                         echo === Instalando dependencias ===
-                        python -m pip install --upgrade pip
-                        pip install -r requirements-dev.txt
+                        pip install -r requirements-dev.txt || exit /b 1
 
                         echo === Django system check ===
-                        python manage.py check
+                        python manage.py check || exit /b 1
 
                         echo === Tests con pytest (solo unitarios; los django_db requieren BD) ===
-                        pytest -v -m "not django_db"
+                        pytest -v -m "not django_db" || exit /b 1
 
-                        echo === Lint con flake8 ===
-                        flake8 apps config core --max-line-length=120 --exclude=migrations || exit /b 0
+                        echo === Lint con flake8 (no bloqueante) ===
+                        flake8 apps config core --max-line-length=120 --exclude=migrations
+                        exit /b 0
                     '''
                 }
             }
@@ -61,16 +61,17 @@ pipeline {
                 dir('frontend') {
                     bat '''
                         echo === Instalando dependencias ===
-                        call npm ci
+                        call npm ci || exit /b 1
 
                         echo === TypeScript check ===
-                        call npx tsc --noEmit
+                        call npx tsc --noEmit || exit /b 1
 
                         echo === Tests con vitest ===
-                        call npm run test
+                        call npm run test || exit /b 1
 
                         echo === Lint con ESLint (no bloqueante: 25 errores preexistentes pendientes de limpiar) ===
-                        call npm run lint || echo Lint con errores - no bloqueante por ahora
+                        call npm run lint
+                        exit /b 0
                     '''
                 }
             }
@@ -105,15 +106,15 @@ pipeline {
                                  passwordVariable: 'DOCKER_PASS')]) {
                     bat '''
                         echo === Login Docker Hub ===
-                        echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin
+                        echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin || exit /b 1
 
                         echo === Push backend ===
-                        docker push %DOCKER_IMAGE_BACKEND%:%IMAGE_TAG%
-                        docker push %DOCKER_IMAGE_BACKEND%:latest
+                        docker push %DOCKER_IMAGE_BACKEND%:%IMAGE_TAG% || exit /b 1
+                        docker push %DOCKER_IMAGE_BACKEND%:latest || exit /b 1
 
                         echo === Push frontend ===
-                        docker push %DOCKER_IMAGE_FRONTEND%:%IMAGE_TAG%
-                        docker push %DOCKER_IMAGE_FRONTEND%:latest
+                        docker push %DOCKER_IMAGE_FRONTEND%:%IMAGE_TAG% || exit /b 1
+                        docker push %DOCKER_IMAGE_FRONTEND%:latest || exit /b 1
 
                         docker logout
                     '''
