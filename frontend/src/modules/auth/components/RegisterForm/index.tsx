@@ -87,7 +87,7 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
         </Alert>
       )}
 
-      <Button type="submit" disabled={loading} className="w-full bg-brand-cyan hover:bg-brand-cyan-dark text-brand-navy font-semibold">
+      <Button type="submit" variant="brand" size="lg" disabled={loading} className="w-full">
         {loading ? 'Creando…' : 'Crear cuenta'}
       </Button>
     </form>

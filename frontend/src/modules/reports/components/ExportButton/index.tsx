@@ -1,5 +1,7 @@
 import { useState } from 'react'
+import { Download, Loader2 } from 'lucide-react'
 import type { ReportFormat } from '../../interfaces/IReportsService'
+import { Button } from '../../../../core/ui/button'
 
 interface ExportButtonProps {
   onExport: (formato: ReportFormat) => Promise<void>
@@ -23,15 +25,19 @@ export function ExportButton({ onExport }: ExportButtonProps) {
   return (
     <div className="flex gap-2">
       {FORMATS.map(({ value, label }) => (
-        <button
+        <Button
           key={value}
           type="button"
+          variant="outline"
+          size="sm"
           disabled={busy !== null}
           onClick={() => void handle(value)}
-          className="rounded-lg border border-gray-300 px-3 py-1.5 text-xs font-medium hover:bg-gray-50 disabled:opacity-50"
         >
-          {busy === value ? '…' : `Exportar ${label}`}
-        </button>
+          {busy === value
+            ? <Loader2 className="h-4 w-4 animate-spin" />
+            : <Download className="h-4 w-4" />}
+          {label}
+        </Button>
       ))}
     </div>
   )

@@ -19,8 +19,8 @@ export function NotificationsPage() {
   } else if (notifications.length === 0) {
     content = (
       <Card>
-        <CardContent className="py-16 text-center text-gray-500">
-          <Bell className="h-12 w-12 mx-auto mb-4 text-gray-300" />
+        <CardContent className="py-16 text-center text-muted-foreground">
+          <Bell className="h-12 w-12 mx-auto mb-4 text-slate-300" />
           No tienes notificaciones todavía.
         </CardContent>
       </Card>
@@ -46,7 +46,7 @@ export function NotificationsPage() {
                 )}
               </div>
             </CardHeader>
-            <CardContent className="pt-0 pl-7 text-sm text-gray-700">{n.cuerpo}</CardContent>
+            <CardContent className="pt-0 pl-7 text-sm text-foreground/80">{n.cuerpo}</CardContent>
           </Card>
         ))}
       </div>
@@ -54,14 +54,14 @@ export function NotificationsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-slate-50">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl mb-2 font-semibold flex items-center gap-2">
-              <Bell className="h-7 w-7 text-brand-cyan" /> Notificaciones
+            <h1 className="text-2xl sm:text-3xl font-bold text-foreground flex items-center gap-2.5">
+              <Bell className="h-7 w-7 text-brand-cyan-dark" /> Notificaciones
             </h1>
-            <p className="text-gray-600">{unreadCount > 0 ? `Tienes ${unreadCount} sin leer` : 'Estás al día'}</p>
+            <p className="text-muted-foreground mt-1">{unreadCount > 0 ? `Tienes ${unreadCount} sin leer` : 'Estás al día'}</p>
           </div>
           {unreadCount > 0 && (
             <Button variant="outline" size="sm" onClick={() => void markAllAsRead()}>
@@ -70,7 +70,7 @@ export function NotificationsPage() {
           )}
         </div>
 
-        {error && <p className="text-red-600 mb-4">{error}</p>}
+        {error && <p className="text-destructive mb-4">{error}</p>}
 
         {content}
       </div>

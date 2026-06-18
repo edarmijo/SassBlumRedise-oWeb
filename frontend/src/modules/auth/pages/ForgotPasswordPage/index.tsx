@@ -1,6 +1,10 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
+import { MailCheck } from 'lucide-react'
 import { useAuthService } from '../../hooks/useAuthService'
+import { Button } from '../../../../core/ui/button'
+import { Input } from '../../../../core/ui/input'
+import { Label } from '../../../../core/ui/label'
 
 /**
  * SRP: collects the email and requests a reset link.
@@ -29,45 +33,33 @@ export function ForgotPasswordPage() {
 
   if (status === 'done') {
     return (
-      <div className="max-w-sm mx-auto text-center space-y-3 py-12">
-        <span className="text-4xl" aria-hidden>📧</span>
-        <h1 className="text-lg font-semibold text-gray-900">Revisa tu correo</h1>
-        <p className="text-sm text-gray-600">{message}</p>
+      <div className="text-center space-y-3 py-4">
+        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-brand-cyan/10 text-brand-cyan-dark">
+          <MailCheck className="h-6 w-6" />
+        </div>
+        <h2 className="text-lg font-semibold text-foreground">Revisa tu correo</h2>
+        <p className="text-sm text-muted-foreground">{message}</p>
       </div>
     )
   }
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-sm mx-auto space-y-4 py-8">
-      <header>
-        <h1 className="text-lg font-semibold text-gray-900">Recuperar contraseña</h1>
-        <p className="text-sm text-gray-500 mt-0.5">
-          Ingresa tu correo y te enviaremos un enlace para restablecerla.
-        </p>
-      </header>
-
-      <div>
-        <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-          Correo electrónico
-        </label>
-        <input
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="space-y-2">
+        <Label htmlFor="email">Correo electrónico</Label>
+        <Input
           id="email"
           type="email"
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="tucorreo@ejemplo.com"
         />
       </div>
 
-      <button
-        type="submit"
-        disabled={status === 'loading'}
-        className="w-full rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-50"
-      >
+      <Button type="submit" variant="brand" size="lg" disabled={status === 'loading'} className="w-full">
         {status === 'loading' ? 'Enviando…' : 'Enviar enlace'}
-      </button>
+      </Button>
     </form>
   )
 }

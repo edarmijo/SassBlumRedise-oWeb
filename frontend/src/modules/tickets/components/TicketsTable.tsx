@@ -46,8 +46,8 @@ export function TicketsTable({ tickets, onView }: TicketsTableProps) {
       <div className="border rounded-lg overflow-hidden">
         <div className="overflow-x-auto">
           <Table>
-            <TableHeader>
-              <TableRow>
+            <TableHeader className="[&_th]:text-xs [&_th]:uppercase [&_th]:tracking-wide [&_th]:text-muted-foreground [&_th]:font-semibold">
+              <TableRow className="bg-muted/50 hover:bg-muted/50">
                 <TableHead>Número</TableHead>
                 <TableHead>Servicio</TableHead>
                 <TableHead>Asunto</TableHead>
@@ -60,19 +60,24 @@ export function TicketsTable({ tickets, onView }: TicketsTableProps) {
             <TableBody>
               {filtered.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={7} className="text-center py-8 text-gray-500">No se encontraron tickets</TableCell>
+                  <TableCell colSpan={7} className="text-center py-10 text-muted-foreground">No se encontraron tickets</TableCell>
                 </TableRow>
               ) : (
                 filtered.map((t) => (
-                  <TableRow key={t.id}>
-                    <TableCell className="font-mono">{t.numero}</TableCell>
+                  <TableRow key={t.id} className="cursor-pointer" onClick={() => onView(t.id)}>
+                    <TableCell className="font-mono font-medium text-foreground">{t.numero}</TableCell>
                     <TableCell>{t.servicioNombre}</TableCell>
                     <TableCell className="max-w-xs truncate">{t.asunto}</TableCell>
                     <TableCell><StatusBadge estado={t.estado} /></TableCell>
                     <TableCell><PriorityBadge prioridad={t.prioridad} /></TableCell>
                     <TableCell>{new Date(t.creadoEn).toLocaleDateString()}</TableCell>
                     <TableCell>
-                      <Button variant="ghost" size="sm" onClick={() => onView(t.id)} aria-label="Ver ticket">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={(e) => { e.stopPropagation(); onView(t.id) }}
+                        aria-label="Ver ticket"
+                      >
                         <Eye className="h-4 w-4" />
                       </Button>
                     </TableCell>
@@ -84,7 +89,7 @@ export function TicketsTable({ tickets, onView }: TicketsTableProps) {
         </div>
       </div>
 
-      <p className="text-sm text-gray-600">Mostrando {filtered.length} de {tickets.length} tickets</p>
+      <p className="text-sm text-muted-foreground">Mostrando {filtered.length} de {tickets.length} tickets</p>
     </div>
   )
 }

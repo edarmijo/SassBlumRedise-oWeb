@@ -1,11 +1,11 @@
 import type { TicketSummary } from '../../interfaces/ITicketService'
 import { TicketStatusBadge } from '../TicketStatusBadge'
 
-const PRIORITY_CLASSES: Record<string, string> = {
-  Critica: 'text-red-600 font-semibold',
-  Alta:    'text-orange-600 font-medium',
-  Media:   'text-yellow-600',
-  Baja:    'text-green-600',
+const PRIORITY_DOT: Record<string, string> = {
+  Critica: 'bg-red-500',
+  Alta:    'bg-amber-500',
+  Media:   'bg-blue-500',
+  Baja:    'bg-slate-400',
 }
 
 interface TicketCardProps {
@@ -29,7 +29,7 @@ export function TicketCard({ ticket, onSelect }: TicketCardProps) {
 
   return (
     <article
-      className="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-gray-300 transition-all cursor-pointer focus-visible:ring-2 focus-visible:ring-blue-500 outline-none"
+      className="group bg-card border border-border rounded-xl p-4 hover:shadow-md hover:border-slate-300 transition-all cursor-pointer focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 outline-none"
       onClick={handleClick}
       onKeyDown={handleKeyDown}
       role="button"
@@ -38,27 +38,28 @@ export function TicketCard({ ticket, onSelect }: TicketCardProps) {
     >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
-          <p className="text-[10px] font-mono text-gray-400 tracking-wide">
+          <p className="text-[10px] font-mono text-muted-foreground tracking-wide">
             {ticket.numero}
           </p>
-          <h3 className="text-sm font-semibold text-gray-900 truncate mt-0.5 leading-snug">
+          <h3 className="text-sm font-semibold text-foreground truncate mt-0.5 leading-snug group-hover:text-brand-cyan-dark transition-colors">
             {ticket.asunto}
           </h3>
-          <p className="text-xs text-gray-500 mt-1 truncate">{ticket.servicioNombre}</p>
+          <p className="text-xs text-muted-foreground mt-1 truncate">{ticket.servicioNombre}</p>
         </div>
         <TicketStatusBadge estado={ticket.estado} />
       </div>
 
-      <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-100">
-        <time className="text-xs text-gray-400">
+      <div className="flex items-center justify-between mt-3 pt-3 border-t border-border">
+        <time className="text-xs text-muted-foreground">
           {new Date(ticket.creadoEn).toLocaleDateString('es-EC', {
             day: '2-digit',
             month: 'short',
             year: 'numeric',
           })}
         </time>
-        <span className={`text-xs ${PRIORITY_CLASSES[ticket.prioridad] ?? 'text-gray-500'}`}>
-          ▲ {ticket.prioridad}
+        <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
+          <span className={`h-2 w-2 rounded-full ${PRIORITY_DOT[ticket.prioridad] ?? 'bg-slate-400'}`} aria-hidden />
+          {ticket.prioridad}
         </span>
       </div>
     </article>

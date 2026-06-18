@@ -1,9 +1,19 @@
+import { Paperclip } from 'lucide-react'
 import { useTicketDetail } from '../../hooks/useTickets'
 import { TicketStatusBadge } from '../TicketStatusBadge'
 import { TicketHistory } from '../TicketHistory'
 
 interface TicketDetailProps {
   ticketId: string
+}
+
+function MetaField({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div>
+      <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">{label}</span>
+      <p className="mt-0.5 text-foreground">{children}</p>
+    </div>
+  )
 }
 
 /**
@@ -17,16 +27,16 @@ export function TicketDetail({ ticketId }: TicketDetailProps) {
   if (isLoading) {
     return (
       <div className="animate-pulse space-y-4">
-        <div className="h-6 bg-gray-200 rounded w-1/3" />
-        <div className="h-4 bg-gray-200 rounded w-2/3" />
-        <div className="h-20 bg-gray-200 rounded" />
+        <div className="h-6 bg-muted rounded w-1/3" />
+        <div className="h-4 bg-muted rounded w-2/3" />
+        <div className="h-20 bg-muted rounded" />
       </div>
     )
   }
 
   if (error) {
     return (
-      <div className="rounded-lg bg-red-50 border border-red-200 p-4 text-sm text-red-700">
+      <div className="rounded-lg bg-destructive/5 border border-destructive/20 p-4 text-sm text-destructive">
         {error}
       </div>
     )
@@ -39,63 +49,43 @@ export function TicketDetail({ ticketId }: TicketDetailProps) {
       {/* Header */}
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0">
-          <p className="text-xs font-mono text-gray-400 tracking-wide">{ticket.numero}</p>
-          <h2 className="text-xl font-semibold text-gray-900 mt-1 leading-snug">
+          <p className="text-xs font-mono text-muted-foreground tracking-wide">{ticket.numero}</p>
+          <h2 className="text-xl font-bold text-foreground mt-1 leading-snug">
             {ticket.asunto}
           </h2>
-          <p className="text-sm text-gray-500 mt-1">{ticket.servicioNombre}</p>
+          <p className="text-sm text-muted-foreground mt-1">{ticket.servicioNombre}</p>
         </div>
         <TicketStatusBadge estado={ticket.estado} />
       </div>
 
       {/* Description */}
       <section>
-        <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-2">
+        <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">
           Descripción
         </h3>
-        <p className="text-sm text-gray-700 whitespace-pre-wrap leading-relaxed">
+        <p className="text-sm text-foreground/90 whitespace-pre-wrap leading-relaxed">
           {ticket.descripcion}
         </p>
       </section>
 
       {/* Metadata grid */}
-      <section className="grid grid-cols-2 gap-4 text-sm bg-gray-50 rounded-lg p-4">
-        <div>
-          <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">
-            Cliente
-          </span>
-          <p className="mt-0.5 text-gray-900">{ticket.clienteNombre}</p>
-        </div>
-        <div>
-          <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">
-            Asignado a
-          </span>
-          <p className="mt-0.5 text-gray-900">
-            {ticket.asignadoNombre ?? <span className="italic text-gray-400">Sin asignar</span>}
-          </p>
-        </div>
-        <div>
-          <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">
-            Prioridad
-          </span>
-          <p className="mt-0.5 text-gray-900">{ticket.prioridad}</p>
-        </div>
-        <div>
-          <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">
-            Creado
-          </span>
-          <p className="mt-0.5 text-gray-900">
-            {new Date(ticket.creadoEn).toLocaleDateString('es-EC', {
-              day: '2-digit', month: 'long', year: 'numeric',
-            })}
-          </p>
-        </div>
+      <section className="grid grid-cols-2 gap-4 text-sm bg-slate-50 border border-border rounded-lg p-4">
+        <MetaField label="Cliente">{ticket.clienteNombre}</MetaField>
+        <MetaField label="Asignado a">
+          {ticket.asignadoNombre ?? <span className="italic text-muted-foreground">Sin asignar</span>}
+        </MetaField>
+        <MetaField label="Prioridad">{ticket.prioridad}</MetaField>
+        <MetaField label="Creado">
+          {new Date(ticket.creadoEn).toLocaleDateString('es-EC', {
+            day: '2-digit', month: 'long', year: 'numeric',
+          })}
+        </MetaField>
       </section>
 
       {/* Attachments */}
       {ticket.adjuntos.length > 0 && (
         <section>
-          <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-2">
+          <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">
             Adjuntos ({ticket.adjuntos.length})
           </h3>
           <ul className="space-y-2">
@@ -105,11 +95,11 @@ export function TicketDetail({ ticketId }: TicketDetailProps) {
                   href={att.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-sm text-blue-600 hover:underline"
+                  className="inline-flex items-center gap-2 text-sm text-brand-cyan-dark font-medium hover:underline"
                 >
-                  <span>📎</span>
+                  <Paperclip className="h-4 w-4 shrink-0" />
                   <span>{att.nombreArchivo}</span>
-                  <span className="text-gray-400 text-xs">
+                  <span className="text-muted-foreground text-xs font-normal">
                     ({(att.tamañoBytes / 1024).toFixed(0)} KB)
                   </span>
                 </a>
@@ -121,7 +111,7 @@ export function TicketDetail({ ticketId }: TicketDetailProps) {
 
       {/* History */}
       <section>
-        <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-3">
+        <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">
           Historial de eventos
         </h3>
         <TicketHistory events={ticket.eventos} />

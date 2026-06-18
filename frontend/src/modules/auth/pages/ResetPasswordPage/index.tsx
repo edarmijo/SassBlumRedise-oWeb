@@ -1,6 +1,11 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
+import { CheckCircle2 } from 'lucide-react'
 import { useAuthService } from '../../hooks/useAuthService'
+import { Button } from '../../../../core/ui/button'
+import { Input } from '../../../../core/ui/input'
+import { Label } from '../../../../core/ui/label'
+import { Alert, AlertDescription } from '../../../../core/ui/alert'
 
 interface ResetPasswordPageProps {
   /** Token from the email link (?token=...). The app router extracts and passes it. */
@@ -49,61 +54,49 @@ export function ResetPasswordPage({ token, onSuccess }: ResetPasswordPageProps) 
 
   if (done) {
     return (
-      <div className="max-w-sm mx-auto text-center space-y-3 py-12">
-        <span className="text-4xl" aria-hidden>✅</span>
-        <h1 className="text-lg font-semibold text-gray-900">Contraseña actualizada</h1>
-        <p className="text-sm text-gray-600">Ya puedes iniciar sesión con tu nueva contraseña.</p>
+      <div className="text-center space-y-3 py-4">
+        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-success/10 text-success">
+          <CheckCircle2 className="h-6 w-6" />
+        </div>
+        <h2 className="text-lg font-semibold text-foreground">Contraseña actualizada</h2>
+        <p className="text-sm text-muted-foreground">Ya puedes iniciar sesión con tu nueva contraseña.</p>
       </div>
     )
   }
 
   return (
-    <form onSubmit={handleSubmit} noValidate className="max-w-sm mx-auto space-y-4 py-8">
-      <header>
-        <h1 className="text-lg font-semibold text-gray-900">Nueva contraseña</h1>
-        <p className="text-sm text-gray-500 mt-0.5">Define una contraseña segura para tu cuenta.</p>
-      </header>
-
-      <div>
-        <label htmlFor="new-password" className="block text-sm font-medium text-gray-700 mb-1">
-          Nueva contraseña
-        </label>
-        <input
+    <form onSubmit={handleSubmit} noValidate className="space-y-4">
+      <div className="space-y-2">
+        <Label htmlFor="new-password">Nueva contraseña</Label>
+        <Input
           id="new-password"
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Mínimo 8 caracteres"
         />
       </div>
 
-      <div>
-        <label htmlFor="confirm-password" className="block text-sm font-medium text-gray-700 mb-1">
-          Confirmar contraseña
-        </label>
-        <input
+      <div className="space-y-2">
+        <Label htmlFor="confirm-password">Confirmar contraseña</Label>
+        <Input
           id="confirm-password"
           type="password"
           value={confirm}
           onChange={(e) => setConfirm(e.target.value)}
-          className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="••••••••"
         />
       </div>
 
       {error && (
-        <p role="alert" className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
-          {error}
-        </p>
+        <Alert variant="destructive">
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
       )}
 
-      <button
-        type="submit"
-        disabled={loading}
-        className="w-full rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-50"
-      >
+      <Button type="submit" variant="brand" size="lg" disabled={loading} className="w-full">
         {loading ? 'Guardando…' : 'Restablecer contraseña'}
-      </button>
+      </Button>
     </form>
   )
 }

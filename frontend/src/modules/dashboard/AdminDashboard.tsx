@@ -16,11 +16,11 @@ export function AdminDashboard() {
   const navigate = useNavigate()
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-slate-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl mb-2 font-semibold">Panel de Administración</h1>
-          <p className="text-gray-600">Gestiona tickets, usuarios, catálogo y reportes del sistema</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Panel de Administración</h1>
+          <p className="text-muted-foreground mt-1">Gestiona tickets, usuarios, catálogo y reportes del sistema</p>
         </div>
 
         <Tabs defaultValue="tickets" className="space-y-6">
@@ -38,7 +38,7 @@ export function AdminDashboard() {
                 <CardDescription>Todos los tickets del sistema</CardDescription>
               </CardHeader>
               <CardContent>
-                {error && <p className="text-red-600 mb-4">{error}</p>}
+                {error && <p className="text-destructive mb-4">{error}</p>}
                 {isLoading ? <Skeleton className="h-48 w-full rounded-lg" /> : <TicketsTable tickets={tickets} onView={(id) => navigate(`/tickets/${id}`)} />}
               </CardContent>
             </Card>

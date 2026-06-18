@@ -1,7 +1,9 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
+import { CheckCircle2, AlertTriangle, Loader2 } from 'lucide-react'
 import { useAuthService } from '../../hooks/useAuthService'
 import { apiError } from '../../../../infrastructure/http/apiError'
+import { Button } from '../../../../core/ui/button'
 
 interface VerifyEmailPageProps {
   token: string
@@ -33,22 +35,37 @@ export function VerifyEmailPage({ token }: VerifyEmailPageProps) {
   }, [auth, token])
 
   return (
-    <div className="max-w-sm mx-auto text-center space-y-3 py-12">
-      {status === 'loading' && <p className="text-sm text-gray-500">Verificando tu correo…</p>}
+    <div className="text-center space-y-4 py-4">
+      {status === 'loading' && (
+        <div className="flex flex-col items-center gap-3 text-muted-foreground">
+          <Loader2 className="h-6 w-6 animate-spin text-brand-cyan-dark" />
+          <p className="text-sm">Verificando tu correo…</p>
+        </div>
+      )}
+
       {status === 'ok' && (
         <>
-          <span className="text-4xl" aria-hidden>✅</span>
-          <h1 className="text-lg font-semibold text-gray-900">Correo verificado</h1>
-          <p className="text-sm text-gray-600">{message}</p>
-          <Link to="/login" className="inline-block text-sm text-blue-600 hover:underline">Iniciar sesión</Link>
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-success/10 text-success">
+            <CheckCircle2 className="h-6 w-6" />
+          </div>
+          <h2 className="text-lg font-semibold text-foreground">Correo verificado</h2>
+          <p className="text-sm text-muted-foreground">{message}</p>
+          <Button asChild variant="brand" className="w-full">
+            <Link to="/login">Iniciar sesión</Link>
+          </Button>
         </>
       )}
+
       {status === 'error' && (
         <>
-          <span className="text-4xl" aria-hidden>⚠️</span>
-          <h1 className="text-lg font-semibold text-gray-900">No se pudo verificar</h1>
-          <p className="text-sm text-red-600">{message}</p>
-          <Link to="/login" className="inline-block text-sm text-blue-600 hover:underline">Volver a iniciar sesión</Link>
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-destructive/10 text-destructive">
+            <AlertTriangle className="h-6 w-6" />
+          </div>
+          <h2 className="text-lg font-semibold text-foreground">No se pudo verificar</h2>
+          <p className="text-sm text-destructive">{message}</p>
+          <Button asChild variant="outline" className="w-full">
+            <Link to="/login">Volver a iniciar sesión</Link>
+          </Button>
         </>
       )}
     </div>

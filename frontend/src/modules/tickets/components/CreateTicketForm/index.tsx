@@ -1,8 +1,17 @@
 import { useState, useRef } from 'react'
 import type { FormEvent } from 'react'
+import { Paperclip, X } from 'lucide-react'
 import { useTicketsList } from '../../hooks/useTickets'
 import { TicketValidatorChain } from '../../validators/TicketValidatorChain'
 import type { TicketPrioridad } from '../../interfaces/ITicketService'
+import { Button } from '../../../../core/ui/button'
+import { Input } from '../../../../core/ui/input'
+import { Label } from '../../../../core/ui/label'
+import { Textarea } from '../../../../core/ui/textarea'
+import {
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+} from '../../../../core/ui/select'
+import { Alert, AlertDescription } from '../../../../core/ui/alert'
 
 interface ServiceOption {
   id: string
@@ -99,11 +108,11 @@ export function CreateTicketForm({ services, onSuccess }: CreateTicketFormProps)
   return (
     <form onSubmit={handleSubmit} noValidate className="space-y-5">
       {/* Asunto */}
-      <div>
-        <label htmlFor="asunto" className="block text-sm font-medium text-gray-700 mb-1">
-          Asunto <span aria-hidden className="text-red-500">*</span>
-        </label>
-        <input
+      <div className="space-y-2">
+        <Label htmlFor="asunto">
+          Asunto <span aria-hidden className="text-destructive">*</span>
+        </Label>
+        <Input
           id="asunto"
           type="text"
           maxLength={80}
@@ -111,56 +120,53 @@ export function CreateTicketForm({ services, onSuccess }: CreateTicketFormProps)
           onChange={(e) => setAsunto(e.target.value)}
           aria-describedby={errors.asunto ? 'asunto-error' : undefined}
           aria-invalid={!!errors.asunto}
-          className={`w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-            errors.asunto ? 'border-red-400 bg-red-50' : 'border-gray-300'
-          }`}
           placeholder="Describe brevemente el problema"
         />
-        <div className="flex justify-between mt-1">
+        <div className="flex justify-between">
           {errors.asunto && (
-            <p id="asunto-error" role="alert" className="text-xs text-red-600">
+            <p id="asunto-error" role="alert" className="text-xs text-destructive">
               {errors.asunto}
             </p>
           )}
-          <p className="text-xs text-gray-400 ml-auto">{asunto.length}/80</p>
+          <p className="text-xs text-muted-foreground ml-auto tabular-nums">{asunto.length}/80</p>
         </div>
       </div>
 
       {/* Servicio */}
-      <div>
-        <label htmlFor="servicio" className="block text-sm font-medium text-gray-700 mb-1">
-          Servicio <span aria-hidden className="text-red-500">*</span>
-        </label>
-        <select
-          id="servicio"
-          value={servicioId}
-          onChange={(e) => setServicioId(e.target.value)}
-          aria-invalid={!!errors.servicioId}
-          className={`w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-            errors.servicioId ? 'border-red-400 bg-red-50' : 'border-gray-300'
-          }`}
-        >
-          <option value="">Selecciona un servicio...</option>
-          {services.map((s) => (
-            <option key={s.id} value={s.id}>{s.nombre}</option>
-          ))}
-        </select>
+      <div className="space-y-2">
+        <Label htmlFor="servicio">
+          Servicio <span aria-hidden className="text-destructive">*</span>
+        </Label>
+        <Select value={servicioId} onValueChange={setServicioId}>
+          <SelectTrigger
+            id="servicio"
+            aria-invalid={!!errors.servicioId}
+            className="w-full aria-invalid:border-destructive"
+          >
+            <SelectValue placeholder="Selecciona un servicio…" />
+          </SelectTrigger>
+          <SelectContent>
+            {services.map((s) => (
+              <SelectItem key={s.id} value={s.id}>{s.nombre}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
         {errors.servicioId && (
-          <p role="alert" className="text-xs text-red-600 mt-1">{errors.servicioId}</p>
+          <p role="alert" className="text-xs text-destructive">{errors.servicioId}</p>
         )}
       </div>
 
       {/* Prioridad */}
-      <div>
-        <span className="block text-sm font-medium text-gray-700 mb-1">Prioridad</span>
+      <div className="space-y-2">
+        <span className="block text-sm font-medium">Prioridad</span>
         <div className="flex gap-2 flex-wrap" role="radiogroup" aria-label="Prioridad del ticket">
           {PRIORIDADES.map((p) => (
             <label
               key={p}
-              className={`flex items-center gap-1.5 cursor-pointer rounded-full px-3 py-1 text-xs font-medium border transition-colors ${
+              className={`flex items-center gap-1.5 cursor-pointer rounded-full px-3.5 py-1.5 text-xs font-medium border transition-colors ${
                 prioridad === p
-                  ? 'bg-blue-600 text-white border-blue-600'
-                  : 'bg-white text-gray-600 border-gray-300 hover:border-blue-400'
+                  ? 'bg-brand-navy text-white border-brand-navy'
+                  : 'bg-card text-muted-foreground border-border hover:border-brand-cyan-dark hover:text-foreground'
               }`}
             >
               <input
@@ -178,58 +184,57 @@ export function CreateTicketForm({ services, onSuccess }: CreateTicketFormProps)
       </div>
 
       {/* Descripción */}
-      <div>
-        <label htmlFor="descripcion" className="block text-sm font-medium text-gray-700 mb-1">
-          Descripción <span aria-hidden className="text-red-500">*</span>
-        </label>
-        <textarea
+      <div className="space-y-2">
+        <Label htmlFor="descripcion">
+          Descripción <span aria-hidden className="text-destructive">*</span>
+        </Label>
+        <Textarea
           id="descripcion"
           rows={5}
           value={descripcion}
           onChange={(e) => setDescripcion(e.target.value)}
           aria-describedby={errors.descripcion ? 'descripcion-error' : undefined}
           aria-invalid={!!errors.descripcion}
-          className={`w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none ${
-            errors.descripcion ? 'border-red-400 bg-red-50' : 'border-gray-300'
-          }`}
+          className="resize-none"
           placeholder="Describe el problema con el mayor detalle posible (mínimo 10 caracteres)"
         />
         {errors.descripcion && (
-          <p id="descripcion-error" role="alert" className="text-xs text-red-600 mt-1">
+          <p id="descripcion-error" role="alert" className="text-xs text-destructive">
             {errors.descripcion}
           </p>
         )}
       </div>
 
       {/* File upload */}
-      <div>
-        <label htmlFor="adjuntos" className="block text-sm font-medium text-gray-700 mb-1">
-          Adjuntos <span className="text-gray-400 text-xs">(opcional, máx. 5 MB c/u)</span>
-        </label>
+      <div className="space-y-2">
+        <Label htmlFor="adjuntos">
+          Adjuntos <span className="text-muted-foreground text-xs font-normal">(opcional, máx. 5 MB c/u)</span>
+        </Label>
         <input
           id="adjuntos"
           type="file"
           multiple
           accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png,.gif"
           onChange={handleFileChange}
-          className="block w-full text-sm text-gray-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+          className="block w-full text-sm text-muted-foreground file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-medium file:bg-slate-100 file:text-foreground hover:file:bg-slate-200 file:cursor-pointer cursor-pointer"
         />
         {errors.adjuntos && (
-          <p role="alert" className="text-xs text-red-600 mt-1">{errors.adjuntos}</p>
+          <p role="alert" className="text-xs text-destructive">{errors.adjuntos}</p>
         )}
         {adjuntos.length > 0 && (
-          <ul className="mt-2 space-y-1">
+          <ul className="mt-1 space-y-1">
             {adjuntos.map((file, i) => (
-              <li key={i} className="flex items-center gap-2 text-xs text-gray-600">
-                <span>📎 {file.name}</span>
-                <span className="text-gray-400">({(file.size / 1024).toFixed(0)} KB)</span>
+              <li key={i} className="flex items-center gap-2 text-xs text-muted-foreground bg-slate-50 border border-border rounded-md px-2.5 py-1.5">
+                <Paperclip className="h-3.5 w-3.5 shrink-0" />
+                <span className="truncate text-foreground">{file.name}</span>
+                <span className="text-muted-foreground shrink-0">({(file.size / 1024).toFixed(0)} KB)</span>
                 <button
                   type="button"
                   onClick={() => removeFile(i)}
-                  className="text-red-500 hover:text-red-700 ml-auto"
+                  className="ml-auto shrink-0 text-muted-foreground hover:text-destructive cursor-pointer"
                   aria-label={`Eliminar ${file.name}`}
                 >
-                  ✕
+                  <X className="h-3.5 w-3.5" />
                 </button>
               </li>
             ))}
@@ -239,24 +244,20 @@ export function CreateTicketForm({ services, onSuccess }: CreateTicketFormProps)
 
       {/* General error */}
       {errors.horario && (
-        <p role="alert" className="text-sm text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
-          {errors.horario}
-        </p>
+        <Alert className="border-amber-200 bg-amber-50 text-amber-800">
+          <AlertDescription className="text-amber-800">{errors.horario}</AlertDescription>
+        </Alert>
       )}
       {errors.general && (
-        <p role="alert" className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
-          {errors.general}
-        </p>
+        <Alert variant="destructive">
+          <AlertDescription>{errors.general}</AlertDescription>
+        </Alert>
       )}
 
       {/* Submit */}
-      <button
-        type="submit"
-        disabled={isSubmitting || isLoading}
-        className="w-full rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-      >
+      <Button type="submit" variant="brand" size="lg" disabled={isSubmitting || isLoading} className="w-full">
         {isSubmitting ? 'Creando ticket…' : 'Crear ticket'}
-      </button>
+      </Button>
     </form>
   )
 }

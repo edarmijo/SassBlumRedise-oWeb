@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
-import { Plus, Ticket as TicketIcon } from 'lucide-react'
+import { Plus, Ticket as TicketIcon, Clock, CheckCircle2, Loader2 } from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../core/ui/tabs'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../core/ui/card'
 import { Skeleton } from '../../core/ui/skeleton'
@@ -8,13 +9,18 @@ import { TicketsTable } from '../tickets/components/TicketsTable'
 import { CreateTicketPage } from '../tickets/pages/CreateTicketPage'
 import type { TicketSummary } from '../tickets/interfaces/ITicketService'
 
-function StatCard({ label, value, accent }: { label: string; value: number; accent?: string }) {
+function StatCard({ label, value, icon: Icon, chip }: { label: string; value: number; icon: LucideIcon; chip: string }) {
   return (
-    <Card>
-      <CardHeader className="pb-3">
-        <CardDescription>{label}</CardDescription>
-        <CardTitle className={`text-3xl ${accent ?? ''}`}>{value}</CardTitle>
-      </CardHeader>
+    <Card className="transition-shadow hover:shadow-md">
+      <div className="flex items-center gap-4 p-5">
+        <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${chip}`}>
+          <Icon className="h-5 w-5" />
+        </div>
+        <div className="min-w-0">
+          <p className="text-sm text-muted-foreground truncate">{label}</p>
+          <p className="text-2xl font-bold text-foreground tabular-nums">{value}</p>
+        </div>
+      </div>
     </Card>
   )
 }
@@ -42,22 +48,22 @@ export function TicketsPanel({ title, subtitle, showCreate = false }: TicketsPan
   const stats = computeStats(tickets)
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-slate-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl mb-2 font-semibold">{title}</h1>
-          <p className="text-gray-600">{subtitle}</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-foreground">{title}</h1>
+          <p className="text-muted-foreground mt-1">{subtitle}</p>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 mb-8">
           {isLoading ? (
-            Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-24 rounded-xl" />)
+            Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-21 rounded-xl" />)
           ) : (
             <>
-              <StatCard label="Total de Tickets" value={stats.total} />
-              <StatCard label="Activos" value={stats.activos} accent="text-yellow-600" />
-              <StatCard label="Resueltos" value={stats.resueltos} accent="text-green-600" />
-              <StatCard label="En Proceso" value={stats.enProceso} accent="text-blue-600" />
+              <StatCard label="Total de Tickets" value={stats.total} icon={TicketIcon} chip="bg-brand-navy/8 text-brand-navy" />
+              <StatCard label="Activos" value={stats.activos} icon={Clock} chip="bg-warning/10 text-warning" />
+              <StatCard label="Resueltos" value={stats.resueltos} icon={CheckCircle2} chip="bg-success/10 text-success" />
+              <StatCard label="En Proceso" value={stats.enProceso} icon={Loader2} chip="bg-brand-cyan/10 text-brand-cyan-dark" />
             </>
           )}
         </div>
@@ -75,7 +81,7 @@ export function TicketsPanel({ title, subtitle, showCreate = false }: TicketsPan
                 <CardDescription>Historial completo de solicitudes</CardDescription>
               </CardHeader>
               <CardContent>
-                {error && <p className="text-red-600 mb-4">{error}</p>}
+                {error && <p className="text-destructive mb-4">{error}</p>}
                 {isLoading ? (
                   <Skeleton className="h-48 w-full rounded-lg" />
                 ) : (

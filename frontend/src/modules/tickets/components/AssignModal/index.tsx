@@ -2,6 +2,11 @@ import { useState, useEffect } from 'react'
 import { ticketAdminService } from '../../services/TicketAdminService'
 import { userAdminService } from '../../../auth/services/UserAdminService'
 import type { AdminUser } from '../../../auth/interfaces/IUserAdminActions'
+import { Button } from '../../../../core/ui/button'
+import {
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+} from '../../../../core/ui/select'
+import { Alert, AlertDescription } from '../../../../core/ui/alert'
 
 interface AssignModalProps {
   ticketId: string
@@ -23,6 +28,12 @@ export function AssignModal({ ticketId, onClose, onAssigned }: AssignModalProps)
     void userAdminService.listUsers({ role: 'worker', estado: 'activo' }).then(setWorkers)
   }, [])
 
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [onClose])
+
   const assign = async () => {
     if (!workerId) return
     setBusy(true)
@@ -40,19 +51,42 @@ export function AssignModal({ ticketId, onClose, onAssigned }: AssignModalProps)
   }
 
   return (
-    <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50 px-4" role="dialog" aria-label="Asignar ticket">
-      <div className="bg-white rounded-xl shadow-lg w-full max-w-sm p-5 space-y-4">
-        <h3 className="text-sm font-semibold text-gray-900">Asignar ticket a un trabajador</h3>
-        <select value={workerId} onChange={(e) => setWorkerId(e.target.value)} className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm">
-          <option value="">Selecciona…</option>
-          {workers.map((w) => <option key={w.id} value={w.id}>{w.email}</option>)}
-        </select>
-        {error && <p role="alert" className="text-sm text-red-600">{error}</p>}
-        <div className="flex justify-end gap-2">
-          <button type="button" onClick={onClose} className="text-sm text-gray-500 px-3 py-1.5">Cancelar</button>
-          <button type="button" disabled={!workerId || busy} onClick={() => void assign()} className="rounded-lg bg-blue-600 text-white text-sm font-semibold px-4 py-1.5 hover:bg-blue-700 disabled:opacity-50">
+    <div
+      className="fixed inset-0 bg-slate-950/50 backdrop-blur-sm flex items-center justify-center z-50 px-4 animate-fade-in-up"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Asignar ticket"
+      onClick={onClose}
+    >
+      <div
+        className="bg-card border border-border rounded-xl shadow-xl w-full max-w-sm p-6 space-y-4"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div>
+          <h3 className="text-base font-semibold text-foreground">Asignar ticket</h3>
+          <p className="text-sm text-muted-foreground mt-0.5">Selecciona un trabajador activo.</p>
+        </div>
+
+        <Select value={workerId} onValueChange={setWorkerId}>
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Selecciona un trabajador…" />
+          </SelectTrigger>
+          <SelectContent>
+            {workers.map((w) => <SelectItem key={w.id} value={w.id}>{w.email}</SelectItem>)}
+          </SelectContent>
+        </Select>
+
+        {error && (
+          <Alert variant="destructive">
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
+
+        <div className="flex justify-end gap-2 pt-1">
+          <Button type="button" variant="ghost" onClick={onClose}>Cancelar</Button>
+          <Button type="button" variant="brand" disabled={!workerId || busy} onClick={() => void assign()}>
             {busy ? 'Asignando…' : 'Asignar'}
-          </button>
+          </Button>
         </div>
       </div>
     </div>

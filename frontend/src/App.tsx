@@ -76,17 +76,26 @@ function SiteLayout() {
 function AuthCard({ title, subtitle, children, footer }: { title: string; subtitle: string; children: ReactNode; footer?: ReactNode }) {
   return (
     <AuthServiceProvider service={authService}>
-      <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center px-4 py-12 bg-gray-50">
-        <Card className="w-full max-w-md">
-          <CardHeader>
-            <CardTitle>{title}</CardTitle>
-            <CardDescription>{subtitle}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            {children}
-            {footer && <div className="mt-6 pt-6 border-t text-center text-sm text-gray-500">{footer}</div>}
-          </CardContent>
-        </Card>
+      <div className="relative min-h-[calc(100vh-4rem)] flex items-center justify-center px-4 py-12 bg-linear-to-b from-slate-50 via-white to-slate-50 overflow-hidden">
+        {/* Brillo de marca sutil de fondo */}
+        <div aria-hidden className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 h-72 w-xl rounded-full bg-brand-cyan/10 blur-3xl" />
+        <div className="relative w-full max-w-md">
+          <div className="mb-6 flex justify-center">
+            <Link to="/" className="inline-flex items-center rounded-full border-2 border-brand-navy bg-brand-navy px-5 py-1.5">
+              <span className="tracking-wider font-semibold text-brand-cyan">SASS BLUM</span>
+            </Link>
+          </div>
+          <Card className="w-full shadow-xl shadow-slate-900/6 border-slate-200">
+            <CardHeader>
+              <CardTitle className="text-xl font-bold text-foreground">{title}</CardTitle>
+              <CardDescription>{subtitle}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              {children}
+              {footer && <div className="mt-6 pt-6 border-t text-center text-sm text-muted-foreground">{footer}</div>}
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </AuthServiceProvider>
   )
@@ -100,7 +109,7 @@ function LoginRoute() {
     <AuthCard
       title="Iniciar sesión"
       subtitle="Accede a tu cuenta de SassBlum"
-      footer={<>¿No tienes cuenta? <Link to="/register" className="text-brand-cyan hover:underline">Regístrate</Link>{' · '}<Link to="/forgot-password" className="text-brand-cyan hover:underline">Olvidé mi contraseña</Link></>}
+      footer={<>¿No tienes cuenta? <Link to="/register" className="text-brand-cyan-dark font-medium hover:underline">Regístrate</Link>{' · '}<Link to="/forgot-password" className="text-brand-cyan-dark font-medium hover:underline">Olvidé mi contraseña</Link></>}
     >
       <LoginForm onSuccess={() => navigate('/app')} />
     </AuthCard>
@@ -113,7 +122,7 @@ function RegisterRoute() {
     <AuthCard
       title="Crear cuenta"
       subtitle="Regístrate como cliente de SassBlum"
-      footer={<>¿Ya tienes cuenta? <Link to="/login" className="text-brand-cyan hover:underline">Inicia sesión</Link></>}
+      footer={<>¿Ya tienes cuenta? <Link to="/login" className="text-brand-cyan-dark font-medium hover:underline">Inicia sesión</Link></>}
     >
       <RegisterForm onSuccess={() => navigate('/login')} />
     </AuthCard>

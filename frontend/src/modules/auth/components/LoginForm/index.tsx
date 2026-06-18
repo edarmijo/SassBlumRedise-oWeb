@@ -49,7 +49,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
         </Alert>
       )}
 
-      <Button type="submit" disabled={isLoading} className="w-full bg-brand-cyan hover:bg-brand-cyan-dark text-brand-navy font-semibold">
+      <Button type="submit" variant="brand" size="lg" disabled={isLoading} className="w-full">
         {isLoading ? 'Entrando…' : 'Ingresar'}
       </Button>
     </form>

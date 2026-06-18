@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import type { ServiceFilterOptions } from '../../interfaces/ICatalogService'
+import { Input } from '../../../../core/ui/input'
 
 interface ServiceFilterProps {
   onChange: (filters: ServiceFilterOptions) => void

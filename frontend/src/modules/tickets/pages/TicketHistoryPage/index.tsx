@@ -31,8 +31,8 @@ export function TicketHistoryPage({ onSelectTicket }: TicketHistoryPageProps) {
   return (
     <section className="space-y-5">
       <header>
-        <h1 className="text-xl font-semibold text-gray-900">Historial de tickets</h1>
-        <p className="text-sm text-gray-500 mt-0.5">Consulta y filtra tus solicitudes.</p>
+        <h2 className="text-xl font-bold text-foreground">Historial de tickets</h2>
+        <p className="text-sm text-muted-foreground mt-0.5">Consulta y filtra tus solicitudes.</p>
       </header>
 
       {/* Filters */}
@@ -40,7 +40,7 @@ export function TicketHistoryPage({ onSelectTicket }: TicketHistoryPageProps) {
         <select
           aria-label="Filtrar por estado"
           onChange={(e) => setFilter('estado', e.target.value)}
-          className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="rounded-lg border border-input bg-input-background text-foreground px-3 py-1.5 text-sm outline-none focus:border-ring focus:ring-2 focus:ring-ring/50 cursor-pointer"
         >
           <option value="">Todos los estados</option>
           {ESTADOS.map((e) => <option key={e} value={e}>{e}</option>)}
@@ -49,7 +49,7 @@ export function TicketHistoryPage({ onSelectTicket }: TicketHistoryPageProps) {
         <select
           aria-label="Filtrar por prioridad"
           onChange={(e) => setFilter('prioridad', e.target.value)}
-          className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="rounded-lg border border-input bg-input-background text-foreground px-3 py-1.5 text-sm outline-none focus:border-ring focus:ring-2 focus:ring-ring/50 cursor-pointer"
         >
           <option value="">Todas las prioridades</option>
           {PRIORIDADES.map((p) => <option key={p} value={p}>{p}</option>)}
@@ -57,14 +57,14 @@ export function TicketHistoryPage({ onSelectTicket }: TicketHistoryPageProps) {
       </div>
 
       {/* List */}
-      {isLoading && <p className="text-sm text-gray-400">Cargando tickets…</p>}
+      {isLoading && <p className="text-sm text-muted-foreground">Cargando tickets…</p>}
       {error && (
-        <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
+        <p className="text-sm text-destructive bg-destructive/5 border border-destructive/20 rounded-lg px-3 py-2">
           {error}
         </p>
       )}
       {!isLoading && !error && tickets.length === 0 && (
-        <p className="text-sm text-gray-400 py-8 text-center">No hay tickets que coincidan.</p>
+        <p className="text-sm text-muted-foreground py-8 text-center">No hay tickets que coincidan.</p>
       )}
       {!isLoading && !error && tickets.length > 0 && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">

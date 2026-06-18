@@ -6,11 +6,11 @@ interface StatusConfig {
 }
 
 const STATUS_CONFIG: Record<TicketEstado, StatusConfig> = {
-  Nuevo:     { label: 'Nuevo',      className: 'bg-blue-100 text-blue-800 border-blue-200' },
-  EnProceso: { label: 'En Proceso', className: 'bg-yellow-100 text-yellow-800 border-yellow-200' },
-  EnEspera:  { label: 'En Espera',  className: 'bg-orange-100 text-orange-800 border-orange-200' },
-  Resuelto:  { label: 'Resuelto',   className: 'bg-green-100 text-green-800 border-green-200' },
-  Cerrado:   { label: 'Cerrado',    className: 'bg-gray-100 text-gray-600 border-gray-200' },
+  Nuevo:     { label: 'Nuevo',      className: 'bg-blue-50 text-blue-700 border-blue-200' },
+  EnProceso: { label: 'En Proceso', className: 'bg-cyan-50 text-cyan-700 border-cyan-200' },
+  EnEspera:  { label: 'En Espera',  className: 'bg-amber-50 text-amber-700 border-amber-200' },
+  Resuelto:  { label: 'Resuelto',   className: 'bg-green-50 text-green-700 border-green-200' },
+  Cerrado:   { label: 'Cerrado',    className: 'bg-slate-100 text-slate-600 border-slate-200' },
 }
 
 interface TicketStatusBadgeProps {
@@ -26,14 +26,15 @@ interface TicketStatusBadgeProps {
 export function TicketStatusBadge({ estado }: TicketStatusBadgeProps) {
   const config = STATUS_CONFIG[estado] ?? {
     label: estado,
-    className: 'bg-gray-100 text-gray-600 border-gray-200',
+    className: 'bg-slate-100 text-slate-600 border-slate-200',
   }
 
   return (
     <span
-      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${config.className}`}
+      className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium border ${config.className}`}
       aria-label={`Estado: ${config.label}`}
     >
+      <span className="h-1.5 w-1.5 rounded-full bg-current opacity-70" aria-hidden />
       {config.label}
     </span>
   )

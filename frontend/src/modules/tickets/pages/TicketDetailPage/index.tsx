@@ -1,3 +1,4 @@
+import { ArrowLeft } from 'lucide-react'
 import { TicketDetail } from '../../components/TicketDetail'
 
 interface TicketDetailPageProps {
@@ -12,17 +13,19 @@ interface TicketDetailPageProps {
  */
 export function TicketDetailPage({ ticketId, onBack }: TicketDetailPageProps) {
   return (
-    <section className="max-w-3xl mx-auto space-y-4">
+    <section className="max-w-3xl mx-auto px-4 py-8 space-y-5">
       {onBack && (
         <button
           type="button"
           onClick={onBack}
-          className="text-sm text-blue-600 hover:underline inline-flex items-center gap-1"
+          className="text-sm text-muted-foreground hover:text-brand-cyan-dark transition-colors inline-flex items-center gap-1.5 cursor-pointer"
         >
-          <span aria-hidden>←</span> Volver al historial
+          <ArrowLeft className="h-4 w-4" /> Volver al historial
         </button>
       )}
-      <TicketDetail ticketId={ticketId} />
+      <div className="bg-card border border-border rounded-xl shadow-sm p-6">
+        <TicketDetail ticketId={ticketId} />
+      </div>
     </section>
   )
 }

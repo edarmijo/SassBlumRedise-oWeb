@@ -1,3 +1,4 @@
+import { ArrowRight } from 'lucide-react'
 import type { TicketEvent } from '../../interfaces/ITicketService'
 import { TicketStatusBadge } from '../TicketStatusBadge'
 import type { TicketEstado } from '../../interfaces/ITicketService'
@@ -21,33 +22,33 @@ const EVENT_LABELS: Record<string, string> = {
 export function TicketHistory({ events }: TicketHistoryProps) {
   if (events.length === 0) {
     return (
-      <p className="text-sm text-gray-500 italic">Sin historial de eventos.</p>
+      <p className="text-sm text-muted-foreground italic">Sin historial de eventos.</p>
     )
   }
 
   return (
-    <ol className="relative border-l-2 border-gray-200 space-y-6 ml-2">
+    <ol className="relative border-l-2 border-border space-y-6 ml-2">
       {events.map((event) => (
         <li key={event.id} className="ml-6">
           {/* Timeline dot */}
-          <span className="absolute -left-2 flex h-4 w-4 items-center justify-center rounded-full bg-white border-2 border-gray-300" />
+          <span className="absolute -left-1.75 mt-1 flex h-3 w-3 items-center justify-center rounded-full bg-brand-cyan ring-4 ring-card" />
 
           <div className="flex flex-col gap-1">
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-xs font-semibold text-gray-700">
+              <span className="text-sm font-semibold text-foreground">
                 {EVENT_LABELS[event.tipoEvento] ?? event.tipoEvento}
               </span>
 
               {event.estadoAnterior && event.estadoNuevo && (
-                <span className="flex items-center gap-1 text-xs text-gray-500">
+                <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
                   <TicketStatusBadge estado={event.estadoAnterior as TicketEstado} />
-                  <span aria-hidden>→</span>
+                  <ArrowRight className="h-3.5 w-3.5" aria-hidden />
                   <TicketStatusBadge estado={event.estadoNuevo as TicketEstado} />
                 </span>
               )}
             </div>
 
-            <time className="text-xs text-gray-400">
+            <time className="text-xs text-muted-foreground">
               {new Date(event.creadoEn).toLocaleString('es-EC', {
                 day: '2-digit',
                 month: 'short',
@@ -56,11 +57,11 @@ export function TicketHistory({ events }: TicketHistoryProps) {
                 minute: '2-digit',
               })}
               {' · '}
-              <span className="font-medium">{event.autorNombre}</span>
+              <span className="font-medium text-foreground/70">{event.autorNombre}</span>
             </time>
 
             {event.comentario && (
-              <p className="text-sm text-gray-700 bg-gray-50 rounded-md px-3 py-2 mt-1">
+              <p className="text-sm text-foreground/90 bg-slate-50 border border-border rounded-md px-3 py-2 mt-1">
                 {event.comentario}
               </p>
             )}
