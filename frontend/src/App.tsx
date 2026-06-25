@@ -10,7 +10,7 @@
  */
 
 import { BrowserRouter, Routes, Route, Outlet, Navigate, Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
-import type { ReactNode } from 'react'
+import { lazy, Suspense, type ReactNode } from 'react'
 
 // Concrete services (injected here only)
 import { authService } from './modules/auth/services/AuthService'
@@ -31,36 +31,48 @@ import { Footer } from './core/ui/layout/Footer'
 import { Toaster } from './core/ui/sonner'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from './core/ui/card'
 
-// Public pages
-import { Home } from './modules/public/pages/Home'
-import { About } from './modules/public/pages/About'
-import { Services } from './modules/public/pages/Services'
-import { Gallery } from './modules/public/pages/Gallery'
-import { Clients } from './modules/public/pages/Clients'
-
-// Auth
+// Auth (eager: pequeños y compartidos por los wrappers de AuthCard)
 import { ProtectedRoute } from './modules/auth/components/ProtectedRoute'
 import { LoginForm } from './modules/auth/components/LoginForm'
 import { RegisterForm } from './modules/auth/components/RegisterForm'
-import { ForgotPasswordPage } from './modules/auth/pages/ForgotPasswordPage'
-import { ResetPasswordPage } from './modules/auth/pages/ResetPasswordPage'
-import { VerifyEmailPage } from './modules/auth/pages/VerifyEmailPage'
 
-// Dashboards + app pages
-import { ClientDashboard } from './modules/dashboard/ClientDashboard'
-import { WorkerDashboard } from './modules/dashboard/WorkerDashboard'
-import { AdminDashboard } from './modules/dashboard/AdminDashboard'
-import { TicketDetailPage } from './modules/tickets/pages/TicketDetailPage'
-import { NotificationsPage } from './modules/notifications/pages/NotificationsPage'
+// Páginas cargadas bajo demanda (code-splitting → chunk por ruta)
+const Home = lazy(() => import('./modules/public/pages/Home').then(m => ({ default: m.Home })))
+const About = lazy(() => import('./modules/public/pages/About').then(m => ({ default: m.About })))
+const Services = lazy(() => import('./modules/public/pages/Services').then(m => ({ default: m.Services })))
+const Gallery = lazy(() => import('./modules/public/pages/Gallery').then(m => ({ default: m.Gallery })))
+const Clients = lazy(() => import('./modules/public/pages/Clients').then(m => ({ default: m.Clients })))
+
+const ForgotPasswordPage = lazy(() => import('./modules/auth/pages/ForgotPasswordPage').then(m => ({ default: m.ForgotPasswordPage })))
+const ResetPasswordPage = lazy(() => import('./modules/auth/pages/ResetPasswordPage').then(m => ({ default: m.ResetPasswordPage })))
+const VerifyEmailPage = lazy(() => import('./modules/auth/pages/VerifyEmailPage').then(m => ({ default: m.VerifyEmailPage })))
+
+const ClientDashboard = lazy(() => import('./modules/dashboard/ClientDashboard').then(m => ({ default: m.ClientDashboard })))
+const WorkerDashboard = lazy(() => import('./modules/dashboard/WorkerDashboard').then(m => ({ default: m.WorkerDashboard })))
+const AdminDashboard = lazy(() => import('./modules/dashboard/AdminDashboard').then(m => ({ default: m.AdminDashboard })))
+const TicketDetailPage = lazy(() => import('./modules/tickets/pages/TicketDetailPage').then(m => ({ default: m.TicketDetailPage })))
+const NotificationsPage = lazy(() => import('./modules/notifications/pages/NotificationsPage').then(m => ({ default: m.NotificationsPage })))
 
 // ── Shared layout ─────────────────────────────────────────────────────────────
+
+function PageFallback() {
+  return (
+    <div className="min-h-[60vh] flex items-center justify-center">
+      <div className="h-8 w-8 rounded-full border-2 border-brand-cyan border-t-transparent animate-spin" aria-label="Cargando" />
+    </div>
+  )
+}
 
 function SiteLayout() {
   const { user } = useAuth()
   const tree = (
     <div className="min-h-screen flex flex-col bg-white">
       <Navbar />
-      <main className="grow"><Outlet /></main>
+      <main className="grow">
+        <Suspense fallback={<PageFallback />}>
+          <Outlet />
+        </Suspense>
+      </main>
       <Footer />
       <Toaster position="top-right" />
     </div>

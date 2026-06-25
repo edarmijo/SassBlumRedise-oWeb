@@ -7,6 +7,8 @@ __all__ = ["TicketValidatorChain"]
 #   file_validator.py           → FileValidator(BaseValidator) — tamaño ≤5MB, mime permitido
 #   business_rule_validator.py  → BusinessRuleValidator(BaseValidator)
 #                                  horario laboral, duplicados activos
-#   ticket_validator_chain.py   → TicketValidatorChain — fachada, delega construcción a ValidatorFactory
+#   ticket_validator_chain.py   → TicketValidatorChain — fachada que delega
+#                                  la construcción a ValidatorFactory
 #
-# OCP: Sprint 4 → CriticalPriorityValidator se agrega en ValidatorFactory; nodos existentes intactos.
+# OCP: Sprint 4 → CriticalPriorityValidator se agrega en ValidatorFactory;
+#      los nodos existentes quedan intactos.

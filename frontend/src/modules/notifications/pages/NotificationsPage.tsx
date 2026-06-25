@@ -33,7 +33,7 @@ export function NotificationsPage() {
             <CardHeader className="pb-2">
               <div className="flex items-start justify-between gap-3">
                 <div className="flex items-start gap-2">
-                  {!n.leida && <Circle className="h-2.5 w-2.5 mt-1.5 fill-brand-cyan text-brand-cyan flex-shrink-0" />}
+                  {!n.leida && <Circle className="h-2.5 w-2.5 mt-1.5 fill-brand-cyan text-brand-cyan shrink-0" />}
                   <div>
                     <CardTitle className="text-base">{n.titulo}</CardTitle>
                     <CardDescription>{new Date(n.creadoEn).toLocaleString()}</CardDescription>

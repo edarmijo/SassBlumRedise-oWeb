@@ -14,6 +14,8 @@ Email verification uses a signed, timestamped token (no extra model needed):
 
 from __future__ import annotations
 
+import logging
+
 from django.core import signing
 from rest_framework_simplejwt.tokens import RefreshToken
 
@@ -21,6 +23,8 @@ from apps.authentication.interfaces import IAuthService
 from apps.authentication.models import User
 from apps.authentication.repositories import UserRepository
 from apps.authentication.validators import RegistrationValidatorChain
+
+logger = logging.getLogger(__name__)
 
 _VERIFY_SALT = "sassblum.email.verify"
 _VERIFY_MAX_AGE = 60 * 60 * 24  # 24 h
@@ -201,7 +205,11 @@ class AuthService(IAuthService):
         try:
             NotificationFactory.build("email").send(user, "Verifica tu correo", context)
         except Exception:  # noqa: BLE001
-            pass
+            logger.warning(
+                "No se pudo enviar el correo de verificación a %s",
+                user.email,
+                exc_info=True,
+            )
 
 
 # ── Singleton accessor ─────────────────────────────────────────────────────────

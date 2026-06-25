@@ -70,8 +70,9 @@ MIDDLEWARE = [
 # ─────────────────────────────────────────────
 CORS_ALLOWED_ORIGINS = [
     origin.strip()
-    for origin in config('CORS_ALLOWED_ORIGINS',
-                        default='http://localhost:5173').split(',')
+    for origin in config(
+        'CORS_ALLOWED_ORIGINS', default='http://localhost:5173'
+    ).split(',')
 ]
 
 

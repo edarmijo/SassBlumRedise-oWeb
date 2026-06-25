@@ -42,7 +42,10 @@ def _handle_domain_errors(fn):
     except InvalidTransitionError as exc:
         return Response({"detail": str(exc)}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
     except TicketValidationError as exc:
-        return Response({"detail": str(exc), "field": exc.field}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(
+            {"detail": str(exc), "field": exc.field},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
 
 class AssignView(APIView):
@@ -52,8 +55,9 @@ class AssignView(APIView):
         serializer = AssignSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         svc = get_ticket_service()
+        worker_id = serializer.validated_data["worker_id"]
         return _handle_domain_errors(
-            lambda: svc.assign_ticket(ticket_id, serializer.validated_data["worker_id"], request.user)
+            lambda: svc.assign_ticket(ticket_id, worker_id, request.user)
         )
 
 
@@ -64,8 +68,9 @@ class ReassignView(APIView):
         serializer = AssignSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         svc = get_ticket_service()
+        worker_id = serializer.validated_data["worker_id"]
         return _handle_domain_errors(
-            lambda: svc.reassign_ticket(ticket_id, serializer.validated_data["worker_id"], request.user)
+            lambda: svc.reassign_ticket(ticket_id, worker_id, request.user)
         )
 
 
@@ -89,6 +94,7 @@ class AddCommentView(APIView):
         serializer = CommentSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         svc = get_ticket_service()
+        comentario = serializer.validated_data["comentario"]
         return _handle_domain_errors(
-            lambda: svc.add_comment(ticket_id, serializer.validated_data["comentario"], request.user)
+            lambda: svc.add_comment(ticket_id, comentario, request.user)
         )

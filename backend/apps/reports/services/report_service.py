@@ -11,7 +11,10 @@ from __future__ import annotations
 from apps.reports.repositories import ReportRepository
 from core.factories.exporter_factory import ExporterFactory
 
-_COLUMNS = ["numero", "asunto", "estado", "prioridad", "servicio", "cliente", "asignado", "creado_en"]
+_COLUMNS = [
+    "numero", "asunto", "estado", "prioridad",
+    "servicio", "cliente", "asignado", "creado_en",
+]
 
 
 class ReportService:

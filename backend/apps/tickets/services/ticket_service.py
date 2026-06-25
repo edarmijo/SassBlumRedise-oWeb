@@ -33,7 +33,9 @@ from core.exceptions.domain_exceptions import (
     CommentRequiredError,
 )
 
-TICKETNOTFOUND="Ticket no encontrado."
+TICKETNOTFOUND = "Ticket no encontrado."
+
+
 class TicketValidationError(Exception):
     def __init__(self, field: str, message: str) -> None:
         self.field = field
@@ -110,9 +112,12 @@ class TicketService(ITicketClientActions, ITicketWorkerActions, ITicketAdminActi
     # ── ITicketWorkerActions ───────────────────────────────────────────────────
 
     @transaction.atomic
-    def update_status(self, ticket_id: int, new_status: str, comment: str, user) -> dict:
+    def update_status(
+        self, ticket_id: int, new_status: str, comment: str, user
+    ) -> dict:
         ticket = self._require(ticket_id, user)
-        self._machine.transition(ticket.estado, new_status, comment)  # raises on invalid / no comment
+        # raises on invalid transition / missing comment
+        self._machine.transition(ticket.estado, new_status, comment)
         anterior = ticket.estado
         self._repo.update(ticket_id, {"estado": new_status})
         TicketEvent.objects.create(

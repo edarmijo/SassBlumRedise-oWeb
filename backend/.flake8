@@ -10,6 +10,7 @@ exclude =
     .git
 per-file-ignores =
     config/settings.py: E501
+    apps/tickets/management/commands/seed_demo.py: E501
     */admin.py: F401
     */models.py: F401
     */views.py: F401

@@ -2,6 +2,7 @@ import { motion } from 'framer-motion'
 import { Target, Eye, Award, Users } from 'lucide-react'
 import { Card, CardContent } from '../../../core/ui/card'
 import { ImageWithFallback } from '../../../core/ui/ImageWithFallback'
+import { PageHero } from '../../../core/ui/layout/PageHero'
 
 const VALUES = [
   { icon: Target, title: 'Misión', text: 'Brindar soluciones tecnológicas integrales que impulsen la competitividad de nuestros clientes.' },
@@ -13,12 +14,13 @@ const VALUES = [
 export function About() {
   return (
     <div className="min-h-screen">
-      <div className="bg-brand-navy text-white py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-4xl md:text-5xl mb-4 font-semibold">Nosotros</motion.h1>
-          <p className="text-xl text-gray-300">La conexión perfecta entre tu empresa y la tecnología</p>
-        </div>
-      </div>
+      <PageHero
+        eyebrow="Quiénes somos"
+        title="Nosotros"
+        subtitle="La conexión perfecta entre tu empresa y la tecnología"
+        accent="indigo"
+        orbPosition="bottom-left"
+      />
 
       <div className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-2 gap-12 items-center">

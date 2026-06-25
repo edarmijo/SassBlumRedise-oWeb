@@ -204,6 +204,7 @@
 
 html {
   font-size: var(--font-size);
+  scroll-behavior: smooth;
 }
 
 /* Scrollbar sutil y acorde a la marca (WebKit) */
@@ -229,6 +230,69 @@ html {
   to { opacity: 1; transform: translateY(0); }
 }
 .animate-fade-in-up { animation: fade-in-up 0.4s ease both; }
+
+/* ════════════════════════════════════════════════════════════════════
+   Cinematic kit — animaciones premium estilo Apple (héroes / landing)
+   ════════════════════════════════════════════════════════════════════ */
+
+/* Texto con gradiente de marca animado — para titulares destacados */
+.text-gradient-brand {
+  background-image: linear-gradient(115deg, #00d4ff 0%, #818cf8 45%, #00d4ff 100%);
+  background-size: 220% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: brand-gradient 9s ease infinite;
+}
+
+/* Orbes de luz flotantes (blobs del hero) */
+@keyframes float-orb {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(0, -36px, 0) scale(1.06); }
+}
+.animate-float-orb { animation: float-orb 11s ease-in-out infinite; }
+
+/* Pulso de brillo suave (glows / CTA) */
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 0.7; }
+}
+.animate-glow-pulse { animation: glow-pulse 5s ease-in-out infinite; }
+
+/* Brillo de barrido sobre botones/CTA al pasar el cursor */
+@keyframes shimmer {
+  to { background-position: 200% center; }
+}
+
+/* Indicador de scroll del hero — descenso continuo */
+@keyframes scroll-cue {
+  0% { transform: translateY(0); opacity: 0; }
+  35% { opacity: 1; }
+  70% { transform: translateY(10px); opacity: 0; }
+  100% { opacity: 0; }
+}
+.animate-scroll-cue { animation: scroll-cue 1.8s ease-in-out infinite; }
+
+/* Carrusel infinito (marquee) — logos de marcas/clientes en bucle continuo */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.animate-marquee {
+  animation: marquee var(--marquee-duration, 36s) linear infinite;
+  width: max-content;
+  will-change: transform;
+}
+/* Pausa al pasar el cursor para poder leer cada logo */
+.marquee-track:hover .animate-marquee {
+  animation-play-state: paused;
+}
+/* Bordes desvanecidos a los lados del carrusel */
+.marquee-mask {
+  -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+  mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+}
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

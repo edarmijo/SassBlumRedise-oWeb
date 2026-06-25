@@ -75,7 +75,8 @@ class TestResolveRecipients:
         fake_user_model.Role.ADMIN = "admin"
         fake_user_model.Estado.ACTIVE = "activo"
 
-        with patch.dict("sys.modules", {"apps.authentication.models": MagicMock(User=fake_user_model)}):
+        patched = {"apps.authentication.models": MagicMock(User=fake_user_model)}
+        with patch.dict("sys.modules", patched):
             event = {"tipo_evento": "comentario", "cliente_id": 5, "autor_id": 9}
             recipients = mod._resolve_recipients(event)
 

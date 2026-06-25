@@ -34,7 +34,9 @@ class ServiceRepository(BaseRepository[Service]):
 
     # ── Catalog-specific ───────────────────────────────────────────────────────
 
-    def get_active(self, categoria: str | None = None, busqueda: str | None = None) -> list[Service]:
+    def get_active(
+        self, categoria: str | None = None, busqueda: str | None = None
+    ) -> list[Service]:
         qs = Service.objects.filter(activo=True)
         if categoria:
             qs = qs.filter(categoria__iexact=categoria)

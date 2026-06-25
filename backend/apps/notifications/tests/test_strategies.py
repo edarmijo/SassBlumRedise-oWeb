@@ -60,7 +60,8 @@ class TestInAppStrategy:
         assert data["leida"] is False
 
     def test_validate_false_when_blocked(self):
-        assert InAppNotificationStrategy(MagicMock()).validate(make_user(estado="bloqueado")) is False
+        strategy = InAppNotificationStrategy(MagicMock())
+        assert strategy.validate(make_user(estado="bloqueado")) is False
 
 
 # ── WebSocketNotificationStrategy ──────────────────────────────────────────────

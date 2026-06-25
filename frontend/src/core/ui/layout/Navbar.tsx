@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { Menu, X, Bell, User, LogOut } from 'lucide-react'
 import { Button } from '../button'
@@ -78,6 +78,22 @@ export function Navbar() {
   const { user } = useAuth()
   const location = useLocation()
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
+
+  useEffect(() => {
+    let ticking = false
+    const onScroll = () => {
+      if (ticking) return
+      ticking = true
+      requestAnimationFrame(() => {
+        setScrolled(window.scrollY > 8)
+        ticking = false
+      })
+    }
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
 
   const items: NavItem[] = [...PUBLIC_ITEMS]
   if (!user) items.push({ to: '/login', label: 'INGRESAR' })
@@ -86,23 +102,34 @@ export function Navbar() {
   const isActive = (to: string) => location.pathname === to
 
   return (
-    <nav className="bg-brand-navy text-white sticky top-0 z-50 border-b border-brand-border">
+    <nav
+      className={`text-white sticky top-0 z-50 transition-shadow duration-300 ${
+        scrolled
+          ? 'bg-brand-navy/95 border-b border-brand-border shadow-lg shadow-brand-navy/30'
+          : 'bg-brand-navy border-b border-transparent'
+      }`}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <Link to="/" className="flex items-center">
-            <div className="border-2 border-brand-cyan rounded-full px-4 py-1">
+          <Link to="/" className="flex items-center group">
+            <div className="border-2 border-brand-cyan rounded-full px-4 py-1 transition-all duration-300 group-hover:bg-brand-cyan/10 group-hover:shadow-[0_0_20px_-4px_var(--brand-cyan)]">
               <span className="text-brand-cyan tracking-wider font-medium">SASS BLUM</span>
             </div>
           </Link>
 
-          <div className="hidden md:flex items-center space-x-6">
+          <div className="hidden md:flex items-center space-x-7">
             {items.map((item) => (
               <Link
                 key={item.to}
                 to={item.to}
-                className={`text-sm hover:text-brand-cyan transition-colors ${isActive(item.to) ? 'text-brand-cyan' : ''}`}
+                className={`group relative text-sm transition-colors hover:text-brand-cyan ${isActive(item.to) ? 'text-brand-cyan' : ''}`}
               >
                 {item.label}
+                <span
+                  className={`absolute -bottom-1.5 left-0 h-0.5 rounded-full bg-brand-cyan transition-all duration-300 ${
+                    isActive(item.to) ? 'w-full' : 'w-0 group-hover:w-full'
+                  }`}
+                />
               </Link>
             ))}
             {user && <AuthedActions />}

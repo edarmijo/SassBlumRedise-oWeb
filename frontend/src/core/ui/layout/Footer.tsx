@@ -1,4 +1,4 @@
-import { Mail, Phone, MapPin, Globe } from 'lucide-react'
+import { Mail, Phone, MapPin, AtSign } from 'lucide-react'
 
 export function Footer() {
   return (
@@ -8,7 +8,7 @@ export function Footer() {
           <div>
             <h3 className="text-brand-cyan uppercase mb-4">Dirección</h3>
             <div className="flex items-start space-x-2">
-              <MapPin className="h-5 w-5 mt-1 flex-shrink-0" />
+              <MapPin className="h-5 w-5 mt-1 shrink-0" />
               <p>Guayaquil - Ecuador</p>
             </div>
           </div>
@@ -22,8 +22,8 @@ export function Footer() {
           <div>
             <h3 className="text-brand-cyan uppercase mb-4">Teléfonos</h3>
             <div className="space-y-2">
-              <div className="flex items-center space-x-2"><Phone className="h-5 w-5" /><span>+593 9 9999 9999</span></div>
-              <div className="flex items-center space-x-2"><Phone className="h-5 w-5" /><span>+593 9 3030 8319</span></div>
+              <a href="tel:+59396999090" className="flex items-center space-x-2 hover:text-brand-cyan transition-colors"><Phone className="h-5 w-5" /><span>+593 9 6999 0990</span></a>
+              <a href="tel:+593995286319" className="flex items-center space-x-2 hover:text-brand-cyan transition-colors"><Phone className="h-5 w-5" /><span>+593 9 9528 6319</span></a>
             </div>
           </div>
         </div>
@@ -32,8 +32,9 @@ export function Footer() {
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-sm text-gray-400">Puedes conocernos a través de nuestras redes sociales</p>
             <div className="flex items-center space-x-4 mt-4 md:mt-0">
-              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="hover:text-brand-cyan transition-colors">
-                <Globe className="h-6 w-6" />
+              <a href="https://instagram.com/sassblum" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 hover:text-brand-cyan transition-colors" aria-label="Instagram @sassblum">
+                <AtSign className="h-6 w-6" />
+                <span className="text-sm">@sassblum</span>
               </a>
             </div>
           </div>
@@ -47,12 +48,12 @@ export function Footer() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h4 className="text-brand-cyan uppercase mb-4 text-center">Nuestros Productos</h4>
           <div className="flex flex-wrap justify-center gap-4 text-sm text-gray-300">
-            <span>• Mantenimiento IT</span>
+            <span>• Infraestructura IT</span>
             <span>• Soporte Técnico</span>
             <span>• Cableado Estructurado</span>
             <span>• Sistema de Vigilancia CCTV</span>
             <span>• Domótica</span>
-            <span>• Venta de Tóner y más</span>
+            <span>• Venta de Servidores</span>
           </div>
         </div>
       </div>

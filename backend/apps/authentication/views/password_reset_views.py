@@ -59,7 +59,8 @@ class ForgotPasswordView(APIView):
         from django.conf import settings  # noqa: PLC0415
         from apps.notifications.factory import NotificationFactory  # noqa: PLC0415
 
-        reset_url = f"{getattr(settings, 'FRONTEND_URL', 'http://localhost:5173')}/reset-password?token={token}"
+        frontend = getattr(settings, 'FRONTEND_URL', 'http://localhost:5173')
+        reset_url = f"{frontend}/reset-password?token={token}"
         context = {
             "tipo": "password_reset",
             "titulo": "Restablece tu contraseña",
