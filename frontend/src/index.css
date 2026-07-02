@@ -10,6 +10,21 @@
 :root {
   --font-size: 16px;
 
+  /* Motion system — Phase 1 foundations */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --duration-fast: 150ms;
+  --duration-normal: 300ms;
+  --duration-slow: 600ms;
+  --duration-glacial: 1200ms;
+  --perspective-card: 1000px;
+  --perspective-page: 1200px;
+  --glow-cyan: 0 0 20px rgba(0, 212, 255, 0.3), 0 0 60px rgba(0, 212, 255, 0.1);
+  --glow-cyan-strong: 0 0 30px rgba(0, 212, 255, 0.5), 0 0 80px rgba(0, 212, 255, 0.2);
+  --float-distance: 10px;
+  --float-duration: 3s;
+
   /* Superficies + texto (escala slate, bordes visibles) */
   --background: #ffffff;
   --foreground: #0f172a;          /* slate-900 — menos duro que negro puro */
@@ -263,6 +278,54 @@ html {
 /* Brillo de barrido sobre botones/CTA al pasar el cursor */
 @keyframes shimmer {
   to { background-position: 200% center; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(calc(-1 * var(--float-distance))); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: var(--glow-cyan); }
+  50% { box-shadow: var(--glow-cyan-strong); }
+}
+
+@keyframes grid-scroll {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 60px; }
+}
+
+@keyframes page-enter {
+  from { opacity: 0; transform: translateY(20px); filter: blur(10px); }
+  to { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+
+@keyframes cursor-breathe {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); opacity: 0.72; }
+  50% { transform: translate3d(0, 0, 0) scale(1.12); opacity: 1; }
+}
+
+@keyframes shimmer-phase {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-float { animation: float var(--float-duration) ease-in-out infinite; }
+.animate-pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
+.animate-grid-scroll { animation: grid-scroll 8s linear infinite; }
+.animate-page-enter { animation: page-enter var(--duration-slow) var(--ease-out-expo) both; }
+.animate-cursor-breathe { animation: cursor-breathe 3.2s ease-in-out infinite; }
+.animate-shimmer-phase {
+  background: linear-gradient(90deg, transparent 25%, rgba(255, 255, 255, 0.1) 50%, transparent 75%);
+  background-size: 200% 100%;
+  animation: shimmer-phase 1.5s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --float-distance: 0px;
+    --float-duration: 0s;
+  }
 }
 
 /* Indicador de scroll del hero — descenso continuo */

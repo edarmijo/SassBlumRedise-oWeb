@@ -11,6 +11,8 @@ import { ArrowRight, ShieldCheck, Cpu, Camera as CameraIcon } from 'lucide-react
 import { Button } from '../../../core/ui/button'
 import { ImageWithFallback } from '../../../core/ui/ImageWithFallback'
 import { InteractiveGlow } from '../../../core/ui/InteractiveGlow'
+import { GridBackground } from '../../../core/ui/GridBackground'
+import { ParticleField } from '../../../core/ui/ParticleField'
 import { Reveal, FocusReveal } from '../../../core/ui/motion'
 import { EASE_APPLE } from '../../../core/ui/motion/ease'
 
@@ -58,12 +60,9 @@ function CinematicHero() {
   const textOpacity = useTransform(scrollY, [0, 420], [1, 0])
 
   return (
-    <section className="relative h-svh min-h-160 bg-brand-navy text-white overflow-hidden">
-      {/* Cuadrícula estática */}
-      <div
-        className="absolute inset-0 opacity-[0.12]"
-        style={{ backgroundImage: GRID_BG }}
-      />
+    <section className="relative h-svh min-h-[44rem] bg-brand-navy text-white overflow-hidden">
+      <GridBackground color="#00d4ff" cellSize={56} opacity={0.14} />
+      <ParticleField />
 
       {/* Resplandor interactivo que sigue al cursor (estilo Antigravity) */}
       <InteractiveGlow color="#00d4ff" size={560} />
@@ -79,24 +78,22 @@ function CinematicHero() {
       />
 
       {/* Contenido del hero */}
-      <div className="relative h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-center text-center">
+      <div className="relative h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid items-center lg:grid-cols-[1.15fr_0.85fr] gap-12 lg:gap-20">
         <motion.div
           style={reduce ? undefined : { y: textY, opacity: textOpacity }}
           variants={heroContainer}
           initial="hidden"
           animate="show"
+          className="max-w-4xl text-center lg:text-left mx-auto lg:mx-0"
         >
-          <motion.p
-            variants={heroChild}
-            transition={{ duration: 0.6, ease: EASE_APPLE }}
-            className="text-brand-cyan mb-5 uppercase tracking-[0.45em] text-sm"
-          >
-            Sass Blum
-          </motion.p>
+          <motion.div variants={heroChild} transition={{ duration: 0.6, ease: EASE_APPLE }} className="mb-6 inline-flex items-center gap-3 rounded-full border border-brand-cyan/25 bg-white/5 px-4 py-2 backdrop-blur-sm">
+            <span className="h-2.5 w-2.5 rounded-full bg-brand-cyan shadow-[0_0_18px_rgba(0,212,255,0.55)]" />
+            <span className="text-brand-cyan uppercase tracking-[0.38em] text-xs md:text-sm">Sass Blum</span>
+          </motion.div>
           <motion.h1
             variants={heroChild}
             transition={{ duration: 0.8, ease: EASE_APPLE }}
-            className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-semibold leading-[0.95] tracking-tight max-w-5xl mx-auto"
+            className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-semibold leading-[0.94] tracking-tight max-w-5xl"
           >
             Innovación tecnológica
             <br />
@@ -105,14 +102,14 @@ function CinematicHero() {
           <motion.p
             variants={heroChild}
             transition={{ duration: 0.7, ease: EASE_APPLE }}
-            className="text-lg md:text-2xl text-gray-300/90 max-w-2xl mx-auto mt-7 mb-10 font-light"
+            className="text-lg md:text-2xl text-gray-300/90 max-w-2xl mt-7 mb-10 font-light mx-auto lg:mx-0"
           >
             Soluciones integrales en tecnología con más de 20 años de experiencia.
           </motion.p>
           <motion.div
             variants={heroChild}
             transition={{ duration: 0.7, ease: EASE_APPLE }}
-            className="flex flex-col sm:flex-row gap-4 justify-center"
+            className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
           >
             <Button
               asChild
@@ -135,8 +132,59 @@ function CinematicHero() {
           </motion.div>
         </motion.div>
 
+        <motion.div
+          initial={reduce ? false : { opacity: 0, y: 40, rotateY: -8 }}
+          animate={{ opacity: 1, y: 0, rotateY: 0 }}
+          transition={{ duration: 0.9, ease: EASE_APPLE, delay: 0.2 }}
+          className="relative hidden lg:block"
+          style={{ perspective: '1200px' }}
+        >
+          <div className="absolute inset-0 rounded-[2rem] bg-brand-cyan/10 blur-3xl animate-glow-pulse" />
+          <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 p-6 shadow-2xl shadow-brand-navy/40 backdrop-blur-md">
+            <div className="flex items-center justify-between border-b border-white/10 pb-5">
+              <div>
+                <p className="text-brand-cyan uppercase tracking-[0.32em] text-xs">Centro de control</p>
+                <h2 className="mt-2 text-2xl font-semibold tracking-tight">Soporte en movimiento</h2>
+              </div>
+              <div className="rounded-full border border-brand-cyan/25 bg-brand-cyan/10 px-3 py-1 text-xs text-brand-cyan">
+                Live
+              </div>
+            </div>
+
+            <div className="mt-6 space-y-4">
+              {[
+                ['Tickets activos', '120+'],
+                ['Cobertura', '24/7'],
+                ['Tiempo medio', '15 min'],
+              ].map(([label, value], index) => (
+                <motion.div
+                  key={label}
+                  initial={reduce ? false : { opacity: 0, x: 18 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.55, ease: EASE_APPLE, delay: 0.25 + index * 0.08 }}
+                  className="flex items-center justify-between rounded-2xl border border-white/8 bg-black/15 px-4 py-3"
+                >
+                  <span className="text-sm text-gray-300">{label}</span>
+                  <span className="text-lg font-semibold text-white">{value}</span>
+                </motion.div>
+              ))}
+            </div>
+
+            <div className="mt-6 grid grid-cols-2 gap-3">
+              <div className="rounded-2xl border border-white/8 bg-brand-navy-deep/80 p-4">
+                <p className="text-xs uppercase tracking-[0.3em] text-gray-400">Prioridad</p>
+                <p className="mt-2 text-base font-medium text-white">Flujo sin fricción</p>
+              </div>
+              <div className="rounded-2xl border border-white/8 bg-brand-navy-deep/80 p-4">
+                <p className="text-xs uppercase tracking-[0.3em] text-gray-400">Estado</p>
+                <p className="mt-2 text-base font-medium text-white">Operativo</p>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
         {/* Indicador de scroll */}
-        <div className="absolute bottom-9 left-1/2 -translate-x-1/2">
+        <div className="absolute bottom-9 left-1/2 -translate-x-1/2 lg:left-[18%]">
           <div className="h-10 w-6 rounded-full border-2 border-brand-cyan/50 flex items-start justify-center p-1.5">
             <span className="block h-2 w-1 rounded-full bg-brand-cyan animate-scroll-cue" />
           </div>

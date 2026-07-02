@@ -9,8 +9,9 @@
  * Notification/Ticket providers (mounted only when a session exists).
  */
 
-import { BrowserRouter, Routes, Route, Outlet, Navigate, Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Outlet, Navigate, Link, useNavigate, useParams, useSearchParams, useLocation } from 'react-router-dom'
 import { lazy, Suspense, type ReactNode } from 'react'
+import { AnimatePresence } from 'framer-motion'
 
 // Concrete services (injected here only)
 import { authService } from './modules/auth/services/AuthService'
@@ -29,6 +30,8 @@ import { NotificationProvider } from './modules/notifications/hooks/useNotificat
 import { Navbar } from './core/ui/layout/Navbar'
 import { Footer } from './core/ui/layout/Footer'
 import { Toaster } from './core/ui/sonner'
+import { CursorFollower } from './core/ui/CursorFollower'
+import { PageTransition } from './core/ui/PageTransition'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from './core/ui/card'
 
 // Auth (eager: pequeños y compartidos por los wrappers de AuthCard)
@@ -65,13 +68,19 @@ function PageFallback() {
 
 function SiteLayout() {
   const { user } = useAuth()
+  const location = useLocation()
   const tree = (
     <div className="min-h-screen flex flex-col bg-white">
+      <CursorFollower />
       <Navbar />
       <main className="grow">
-        <Suspense fallback={<PageFallback />}>
-          <Outlet />
-        </Suspense>
+        <AnimatePresence mode="wait" initial={false}>
+          <Suspense fallback={<PageFallback />}>
+            <PageTransition key={location.pathname} className="min-h-full">
+              <Outlet />
+            </PageTransition>
+          </Suspense>
+        </AnimatePresence>
       </main>
       <Footer />
       <Toaster position="top-right" />
